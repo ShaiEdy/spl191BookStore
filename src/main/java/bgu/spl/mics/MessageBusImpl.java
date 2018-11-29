@@ -17,7 +17,7 @@ import java.util.concurrent.*;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl implements MessageBus {
-	private int num;
+    private int num;
 	private ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>> microServiceToQueue; // hashMap of microServices and the related Queue
 	private ConcurrentHashMap<Class, LinkedBlockingQueue<MicroService>> eventToMicroService; // hashMap of event and the subscribed micro
 	//todo: maybe replacing the vector with arrayList
