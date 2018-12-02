@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import java.util.Vector;
 
 /**
  * Passive object representing the store finance management. 
@@ -12,30 +13,35 @@ package bgu.spl.mics.application.passiveObjects;
  * You can add ONLY private fields and methods to this class as you see fit.
  */
 public class MoneyRegister {
-	
-	/**
-     * Retrieves the single instance of this class.
-     */
-	public static MoneyRegister getInstance() {
-		//TODO: Implement this
-		return null;
+	private Vector<OrderReceipt> orderReceipts;
+	private int totalEarning=0;
+	private static class singeltonHolder {
+		private static MoneyRegister instance = new MoneyRegister();
 	}
-	
+	private MoneyRegister() {
+	}
+	/**
+	 * Retrieves the single instance of this class.
+	 */
+	public static MoneyRegister getInstance() {
+		return singeltonHolder.instance;
+	}
+
 	/**
      * Saves an order receipt in the money register.
      * <p>   
      * @param r		The receipt to save in the money register.
      */
 	public void file (OrderReceipt r) {
-		//TODO: Implement this.
+		orderReceipts.add(r);
+		totalEarning= totalEarning+ r.getPrice();
 	}
 	
 	/**
      * Retrieves the current total earnings of the store.  
      */
 	public int getTotalEarnings() {
-		//TODO: Implement this
-		return 0;
+		return totalEarning;
 	}
 	
 	/**
