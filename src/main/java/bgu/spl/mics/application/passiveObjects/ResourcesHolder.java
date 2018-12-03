@@ -51,7 +51,7 @@ public class ResourcesHolder {
 			e.printStackTrace();
 		}
 
-		return null;
+		return future;
 	}
 	
 	/**
