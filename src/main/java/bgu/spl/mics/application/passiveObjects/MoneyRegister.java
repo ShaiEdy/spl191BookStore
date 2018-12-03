@@ -1,6 +1,9 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Vector;
 
 /**
@@ -49,8 +52,8 @@ public class MoneyRegister {
 	 * <p>
 	 * @param amount    amount to charge
 	 */
-	public void chargeCreditCard(Customer c, int amount) {
-		// TODO Implement this
+	public void chargeCreditCard(Customer c, int amount) { //assume the customer has enough money
+		c.setAvailableCreditAmount(amount);
 	}
 
 	/**
@@ -58,7 +61,17 @@ public class MoneyRegister {
 	 * currently in the MoneyRegister
 	 * This method is called by the main method in order to generate the output..
 	 */
-	public void printOrderReceipts(String filename) {
-		//TODO: Implement this
+	public void printOrderReceipts(String filename) { //using serialized of java
+		try {
+			FileOutputStream fileOut = new FileOutputStream(filename);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(orderReceipts);
+			out.close();
+			fileOut.close();
+			System.out.println("\nSerialization Successful... Checkout your specified output file..\n");
+
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
