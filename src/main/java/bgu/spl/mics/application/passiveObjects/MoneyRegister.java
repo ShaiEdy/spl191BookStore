@@ -15,7 +15,7 @@ import java.util.Vector;
 public class MoneyRegister {
 	private Vector<OrderReceipt> orderReceipts;
 	private int totalEarning=0;
-	private static class singeltonHolder {
+	private static class singletonHolder {
 		private static MoneyRegister instance = new MoneyRegister();
 	}
 	private MoneyRegister() {
@@ -24,7 +24,7 @@ public class MoneyRegister {
 	 * Retrieves the single instance of this class.
 	 */
 	public static MoneyRegister getInstance() {
-		return singeltonHolder.instance;
+		return singletonHolder.instance;
 	}
 
 	/**

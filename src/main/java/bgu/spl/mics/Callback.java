@@ -6,5 +6,4 @@ package bgu.spl.mics;
 public interface Callback<T> {
 
     public void call(T c); // T is type of Event/Broadcast
-
 }
