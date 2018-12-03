@@ -1,13 +1,22 @@
 package bgu.spl.mics.application.messages;
 
-public class CheckAvailabilityEvent {
-    private String senderName;
+import bgu.spl.mics.Event;
 
-    public CheckAvailabilityEvent(String senderName) {
+public class CheckAvailabilityEvent implements Event {
+    private String senderName;
+    private String bookTitle;
+
+    public CheckAvailabilityEvent(String senderName, String bookTitle) {
         this.senderName = senderName;
+        this.bookTitle = bookTitle;
     }
 
     public String getSenderName() {
         return senderName;
     }
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
 }
