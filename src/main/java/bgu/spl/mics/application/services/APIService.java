@@ -15,10 +15,10 @@ import bgu.spl.mics.example.messages.ExampleEvent;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class APIService extends MicroService {
-	private boolean initialized;
+	private boolean initialized; //todo- maybe delete
+
 	public APIService() {
-		super("Change_This_Name");
-		// TODO Implement this
+		super("APIService");
 	}
 
 	@Override
