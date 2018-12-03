@@ -1,6 +1,11 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Callback;
+import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.AcquireVehicleEvent;
+import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
+import bgu.spl.mics.example.messages.ExampleEvent;
 
 /**
  * ResourceService is in charge of the store resources - the delivery vehicles.
@@ -13,6 +18,8 @@ import bgu.spl.mics.MicroService;
  */
 public class ResourceService extends MicroService{
 
+	private ResourcesHolder resourcesHolder = ResourcesHolder.getInstance();
+
 	public ResourceService() {
 		super("Change_This_Name");
 		// TODO Implement this
@@ -20,7 +27,12 @@ public class ResourceService extends MicroService{
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
+		subscribeEvent(AcquireVehicleEvent.class, new Callback<AcquireVehicleEvent>() {
+			public void call(AcquireVehicleEvent c) {
+				Future future = resourcesHolder.acquireVehicle();
+				complete(c, future.get());
+			}
+		});
 		
 	}
 
