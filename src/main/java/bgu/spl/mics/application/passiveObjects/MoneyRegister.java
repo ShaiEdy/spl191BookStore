@@ -72,6 +72,7 @@ public class MoneyRegister {
 
 		}catch (IOException e) {
 			e.printStackTrace();
+			//ho
 		}
 	}
 }
