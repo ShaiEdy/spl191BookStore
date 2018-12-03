@@ -61,11 +61,7 @@ public class ResourcesHolder {
      * @param vehicle	{@link DeliveryVehicle} to be released.
      */
 	public void releaseVehicle(DeliveryVehicle vehicle) {
-		try {
-			cars.put(vehicle);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		cars.add(vehicle);
 	}
 	
 	/**
