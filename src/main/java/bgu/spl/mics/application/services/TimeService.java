@@ -31,9 +31,7 @@ public class TimeService extends MicroService{
 
 	@Override
 	protected void initialize() {
-		subscribeBroadcast(TickBroadcast.class, c -> {
-			if (c.getTickNumber() == c.getTickDuration())
-				terminate();});
+//ho
 
 	}
 
