@@ -19,6 +19,14 @@ public class OrderReceipt {
 	private int processTick;
 
 
+	public OrderReceipt(int orderId, String sellingServiceName, int customerId, String bookTitle, int price) {
+		this.orderId = orderId;
+		this.sellingServiceName = sellingServiceName;
+		this.customerId = customerId;
+		this.bookTitle = bookTitle;
+		this.price = price;
+	}
+
 	/**
      * Retrieves the orderId of this receipt.
      */
