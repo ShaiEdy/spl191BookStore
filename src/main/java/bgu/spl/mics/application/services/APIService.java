@@ -1,9 +1,14 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Callback;
+
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.example.messages.ExampleBroadcast;
-import bgu.spl.mics.example.messages.ExampleEvent;
+import bgu.spl.mics.application.messages.BookOrderEvent;
+import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.passiveObjects.Customer;
+
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 /**
  * APIService is in charge of the connection between a client and the store.
@@ -14,30 +19,34 @@ import bgu.spl.mics.example.messages.ExampleEvent;
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
+
 public class APIService extends MicroService {
 	private boolean initialized; //todo- maybe delete
-
-	public APIService() {
+	private Customer customer;
+	private ConcurrentHashMap<Integer,Vector<String>> orderSchedule;  // as read in the input  orderSchedule
+	public APIService(Customer customer) {
 		super("APIService");
+		this.customer=customer;
+		orderSchedule= new ConcurrentHashMap<>();
 	}
 
 	@Override
 	protected void initialize() {
-		this.subscribeBroadcast(ExampleBroadcast.class, c -> {
-			System.out.println("BroadCast-Callback");
-			synchronized (c) {
-				c.notifyAll();}
-		});
-		this.subscribeEvent(ExampleEvent.class, c -> {
-			System.out.println("Im princess Adi");
-			complete(c,c.getSenderName());
+		this.subscribeBroadcast(TickBroadcast.class, c -> {
+			if(orderSchedule.containsKey(c.getTickNumber())){
+				//if the current time tick is a tick  that has saved in the orderSchedule, make buy function for those books
+				for (String bookName: orderSchedule.get(c.getTickNumber())) //bu each book in the vector
+				buy(bookName);
+			}
 		});
 		initialized=true;
-		synchronized (this) {
-			this.notifyAll();
-		}
 	}
 	public boolean hasBeenInitialized(){
 		return initialized;
 	}
+	public void buy (String bookTitle){  // this method will be call from the main?
+		BookOrderEvent bookOrderEvent= new BookOrderEvent("APIService", bookTitle);
+		sendEvent(bookOrderEvent);
+	}
 }
+
