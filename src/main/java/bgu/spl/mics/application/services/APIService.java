@@ -16,6 +16,7 @@ import bgu.spl.mics.example.messages.ExampleEvent;
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
+//;lk
 public class APIService extends MicroService {
 	private boolean initialized; //todo- maybe delete
 
