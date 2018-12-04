@@ -1,3 +1,4 @@
+/*
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.services.APIService;
@@ -103,3 +104,4 @@ public class MessageBusTest {
     }
 
 }
+*/

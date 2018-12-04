@@ -14,25 +14,34 @@ import bgu.spl.mics.application.messages.TickBroadcast;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class TimeService extends MicroService{
-
+	private int currentTimeTick;
 	private int speed;
 	private int duration; // number of ticks until the program
 
 	public TimeService() {
-		super("Change_This_Name");
-		// TODO Implement this
+		super("TimeService");
+
 	}
 
 	public TimeService(int speed, int duration){
 		super("TimeService");
 		this.speed = speed;
 		this.duration = duration;
+		currentTimeTick=0;
 	}
 
 	@Override
 	protected void initialize() {
-//ho
-
+		while (currentTimeTick!=duration){
+			TickBroadcast tickBroadcast= new TickBroadcast(getName(),currentTimeTick,duration);
+			sendBroadcast(tickBroadcast);
+			currentTimeTick= currentTimeTick+1;
+			try {
+				Thread.sleep(speed); // sleep is the number of milliSec between ticks
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
