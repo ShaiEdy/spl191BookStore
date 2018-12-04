@@ -1,4 +1,5 @@
-/*package bgu.spl.mics;
+/*
+package bgu.spl.mics;
 
 import bgu.spl.mics.application.services.APIService;
 import bgu.spl.mics.example.messages.ExampleBroadcast;
@@ -102,4 +103,5 @@ public class MessageBusTest {
 
     }
 
-}*/
+}
+*/

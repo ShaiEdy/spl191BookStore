@@ -1,6 +1,11 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -17,7 +22,7 @@ public class Inventory {
 	private static Inventory inventory = null; // Singleton.
 	private ConcurrentHashMap<String,BookInventoryInfo> bookInventoryInfo;
 
-	private Inventory() { // Constructor
+	private Inventory() {
 		bookInventoryInfo= new ConcurrentHashMap<>();
 		// the books will be loaded in load function
 	}
@@ -41,6 +46,7 @@ public class Inventory {
 		for (BookInventoryInfo book : inventory) {
 			bookInventoryInfo.put(book.getBookTitle(), book); //TODO: make sure load wont be called more than one time.
 		}
+
 	}
 	
 	/**
@@ -89,6 +95,21 @@ public class Inventory {
      * This method is called by the main method in order to generate the output.
      */
 	public void printInventoryToFile(String filename){
-		//TODO: todo
+		HashMap<String,Integer> inventoryHashMap= new HashMap<>(); // this hashMap will be printed
+		Iterator keySetIterator= bookInventoryInfo.keySet().iterator();
+		while (keySetIterator.hasNext()){
+			String bookName= (String)keySetIterator.next();
+			Integer amount = bookInventoryInfo.get(bookName).getAmountInInventory();
+			inventoryHashMap.put(bookName, amount); //put in the hashMap that will be printed only the name and the amount
+		}
+		try{
+			FileOutputStream fileOut= new FileOutputStream((filename));
+			ObjectOutputStream  out = new ObjectOutputStream(fileOut);
+			out.writeObject(inventoryHashMap);
+			out.close();
+			fileOut.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
