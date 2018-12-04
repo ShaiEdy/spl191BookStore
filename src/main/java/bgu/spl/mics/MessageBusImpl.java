@@ -53,7 +53,7 @@ public class MessageBusImpl implements MessageBus {
 
 	public <T> void complete(Event<T> e, T result) { // microService call this when it finish the callback
 		Future future = messageFutureHashMap.get(e);
-		future.resolve(result);
+		future.resolve(result); //set the future that the send event microService got as a promise to result
 	}
 
 	public void sendBroadcast(Broadcast b) {
@@ -67,7 +67,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	public <T> Future<T> sendEvent(Event<T> e) {
-		if (!eventToMicroService.containsKey(e.getClass())) return null;
+		if (!eventToMicroService.containsKey(e.getClass())) return null;// if no microService subscribed to this event return null
 		Future future = new Future();
 		messageFutureHashMap.put(e, future);
 		MicroService microService = null;
