@@ -30,9 +30,15 @@ public class InventoryService extends MicroService {
 		subscribeEvent(CheckAvailabilityEvent.class, c -> {
 			synchronized (inventory) {
 				int price = inventory.checkAvailabiltyAndGetPrice(c.getBookTitle());
-				complete(c, price);
+				if (price == -1) complete(c, price);
+				else {
+					//inventory.take(c.getBookTitle());
+					complete(c, price);
+				}
 			}
 		});
+
+
 	}
 
 }

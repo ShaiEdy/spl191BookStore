@@ -5,9 +5,11 @@ import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.BookOrderEvent;
 import bgu.spl.mics.application.messages.CheckAvailabilityEvent;
+import bgu.spl.mics.application.messages.TakeBookEvent;
 import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.MoneyRegister;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
+import bgu.spl.mics.application.passiveObjects.OrderResult;
 
 /**
  * Selling service in charge of taking orders from customers.
@@ -32,17 +34,25 @@ public class SellingService extends MicroService {
 		subscribeEvent(BookOrderEvent.class, new Callback<BookOrderEvent>() {
 			public void call(BookOrderEvent c) {
 				CheckAvailabilityEvent checkAvailabilityEvent = new CheckAvailabilityEvent(getName(), c.getBookTitle());
-				Future<Integer> future = sendEvent(checkAvailabilityEvent);
-				Integer price = future.get();
+				Future<Integer> checkAvailabilityEventFuture = sendEvent(checkAvailabilityEvent);
+				Integer price = checkAvailabilityEventFuture.get();
 				if (price == -1) complete(c, null);
 				else {
 					Customer customer = c.getCustomer();
 					int amount = customer.getAvailableCreditAmount();
-					if (price > amount) { // if Customer doesnt have enough money.
+					if (price > amount)  // if Customer doesn't have enough money.
+						complete(c, null);
+					else { // we need to process the purchase
+						TakeBookEvent takeBookEvent = new TakeBookEvent(getName(),c.getBookTitle());
+						Future<OrderResult> takeBookEventFuture = sendEvent(takeBookEvent);
+						OrderResult orderResult = takeBookEventFuture.get();
+						if (orderResult == OrderResult.SUCCESSFULLY_TAKEN) {
+							moneyRegister.chargeCreditCard(customer, amount);
+							OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price);
+							complete(c, orderReceipt);
 
+						}
 					}
-					OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price);
-					complete(c, orderReceipt);
 				}
 			}
 		});

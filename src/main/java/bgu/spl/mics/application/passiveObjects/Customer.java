@@ -75,7 +75,7 @@ public class Customer {
 	}
 
 	public synchronized void setAvailableCreditAmount(int amount) {
-		 availableCreditAmount= availableCreditAmount-amount;
+		 availableCreditAmount = availableCreditAmount-amount;
 	}
 	/**
      * Retrieves this customers credit card serial number.    
