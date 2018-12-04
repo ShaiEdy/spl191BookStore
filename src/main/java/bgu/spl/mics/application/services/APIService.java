@@ -2,6 +2,8 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.BookOrderEvent;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.example.messages.ExampleBroadcast;
 import bgu.spl.mics.example.messages.ExampleEvent;
 
@@ -23,19 +25,11 @@ public class APIService extends MicroService {
 
 	@Override
 	protected void initialize() {
-		this.subscribeBroadcast(ExampleBroadcast.class, c -> {
-			System.out.println("BroadCast-Callback");
-			synchronized (c) {
-				c.notifyAll();}
+		this.subscribeBroadcast(TickBroadcast.class, c -> {
+			System.out.println("tick"); //change this
 		});
-		this.subscribeEvent(ExampleEvent.class, c -> {
-			System.out.println("Im princess Adi");
-			complete(c,c.getSenderName());
-		});
+		this.subscribeEvent(BookOrderEvent.class, c -> complete(c,c.getSenderName()));
 		initialized=true;
-		synchronized (this) {
-			this.notifyAll();
-		}
 	}
 	public boolean hasBeenInitialized(){
 		return initialized;
