@@ -80,7 +80,6 @@ public class Inventory {
 		return price;
 	}
 
-	
 	/**
      * 
      * <p>

@@ -23,6 +23,7 @@ public class MoneyRegister {
 	}
 	private MoneyRegister() {
 	}
+
 	/**
 	 * Retrieves the single instance of this class.
 	 */
@@ -36,8 +37,10 @@ public class MoneyRegister {
 	 * @param r     The receipt to save in the money register.
 	 */
 	public void file (OrderReceipt r) {
-		orderReceipts.add(r);
-		totalEarning= totalEarning+ r.getPrice();
+		synchronized (this) {
+			orderReceipts.add(r);
+			totalEarning = totalEarning + r.getPrice();
+		}
 	}
 
 	/**
