@@ -29,9 +29,7 @@ public class MessageBusImpl implements MessageBus {
 	private MessageBusImpl() { // Constructor
 		microServiceToQueue = new ConcurrentHashMap<>();
 		eventToMicroService = new ConcurrentHashMap<>(); //TODO: make sure we add all the events as keys to this hashmap
-		eventToMicroService.put(ExampleEvent.class, new LinkedBlockingQueue<>());
 		broadCastToMicroService = new ConcurrentHashMap<>(); //TODO: make sure we add all the broadCasts as keys to this hashmap
-		broadCastToMicroService.put(ExampleBroadcast.class, new Vector<>());
 		messageFutureHashMap = new ConcurrentHashMap<>();
 	}
 
@@ -42,10 +40,14 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
+		if (!eventToMicroService.containsKey(type))
+			eventToMicroService.put(type, new LinkedBlockingQueue<>());
 		eventToMicroService.get(type).add(m);
 	}
 
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
+		if (!broadCastToMicroService.containsKey(type))
+			broadCastToMicroService.put(type, new Vector<>());
 		broadCastToMicroService.get(type).add(m);
 	}
 
@@ -55,6 +57,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	public void sendBroadcast(Broadcast b) {
+		if (!broadCastToMicroService.containsKey(b.getClass())) return;
 		Vector<MicroService> microServiceVector = broadCastToMicroService.get(b.getClass());
 		Iterator microServiceVectorIterator = microServiceVector.iterator();
 		while (microServiceVectorIterator.hasNext()) {
@@ -63,12 +66,12 @@ public class MessageBusImpl implements MessageBus {
 		}
 	}
 
-	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
+		if (!eventToMicroService.containsKey(e.getClass())) return null;
 		Future future = new Future();
 		messageFutureHashMap.put(e, future);
 		MicroService microService = null;
-		try {
+		try { // todo: we need to return null if no microService ever subscribed to this event.
 			microService = eventToMicroService.get(e.getClass()).take();
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();

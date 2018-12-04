@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Callback;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.CheckAvailabilityEvent;
 import bgu.spl.mics.application.passiveObjects.Inventory;
@@ -14,10 +15,10 @@ import bgu.spl.mics.application.passiveObjects.Inventory;
  * You MAY change constructor signatures and even add new public constructors.
  */
 
-//Event that being handled by this MicroService:
-//checkAvailabilityEvent
+//Events that are being handled by this MicroService:
+//checkAvailabilityEvent - Future holds price.
 
-public class InventoryService extends MicroService{
+public class InventoryService extends MicroService {
 	private Inventory inventory;
 
 	public InventoryService() {
@@ -26,8 +27,18 @@ public class InventoryService extends MicroService{
 	}
 
 	protected void initialize() {
+		subscribeEvent(CheckAvailabilityEvent.class, c -> {
+			synchronized (inventory) {
+				int price = inventory.checkAvailabiltyAndGetPrice(c.getBookTitle());
+				if (price == -1) complete(c, null);
+				else {
+					inventory.take(c.getBookTitle());
+					complete(c, price);
+				}
+			}
+		});
 
-		
+
 	}
 
 }
