@@ -44,8 +44,8 @@ public class APIService extends MicroService {
 	public boolean hasBeenInitialized(){
 		return initialized;
 	}
-	public void buy (String bookTitle){  // this method will be call from the main?
-		BookOrderEvent bookOrderEvent= new BookOrderEvent("APIService", bookTitle);
+	private void buy (String bookTitle){  // this method will be call from the main?
+		BookOrderEvent bookOrderEvent= new BookOrderEvent("APIService", bookTitle, customer);
 		sendEvent(bookOrderEvent);
 	}
 }

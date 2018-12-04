@@ -7,6 +7,7 @@ public class TickBroadcast implements Broadcast {
     private String senderId;
     private int tickNumber;
 
+
     public TickBroadcast(String senderId, int tickNumber) {
         this.senderId = senderId;
         this.tickNumber = tickNumber;

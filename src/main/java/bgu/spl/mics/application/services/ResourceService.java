@@ -4,6 +4,7 @@ import bgu.spl.mics.Callback;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AcquireVehicleEvent;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 import bgu.spl.mics.example.messages.ExampleEvent;
 
@@ -27,13 +28,18 @@ public class ResourceService extends MicroService{
 
 	@Override
 	protected void initialize() {
+		subscribeBroadcast(TickBroadcast.class, new Callback<TickBroadcast>() {
+			@Override
+			public void call(TickBroadcast c) {
+				//todo- if the time end- do unregister.
+			}
+		});
 		subscribeEvent(AcquireVehicleEvent.class, new Callback<AcquireVehicleEvent>() {
 			public void call(AcquireVehicleEvent c) {
 				Future future = resourcesHolder.acquireVehicle();
 				complete(c, future.get());
 			}
 		});
-		
 	}
 
 }

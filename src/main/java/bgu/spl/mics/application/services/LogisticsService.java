@@ -28,10 +28,9 @@ public class LogisticsService extends MicroService {
 		this.subscribeBroadcast(TickBroadcast.class, c -> System.out.println("im logistic the king"));
 		this.subscribeEvent(DeliveryEvent.class, c -> {
 			AcquireVehicleEvent acquireVehicleEvent = new AcquireVehicleEvent("LogisticsService");
-
 			Future<DeliveryVehicle> deliveryVehicleFuture= sendEvent(acquireVehicleEvent);
 			DeliveryVehicle deliveryVehicle= deliveryVehicleFuture.get();
 			deliveryVehicle.deliver(c.getAddress(),c.getDistance());
-		}); //
+		}); 
 	}
 }
