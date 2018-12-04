@@ -102,7 +102,7 @@ public class MessageBusImpl implements MessageBus {
 		}
 	}
 
-	@Override
+
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 		try {
 			if (microServiceToQueue.containsKey(m)) { // If TRUE, then m was registered.
