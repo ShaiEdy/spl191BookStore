@@ -1,12 +1,10 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Broadcast;
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.messages.BookOrderEvent;
-import bgu.spl.mics.application.messages.CheckAvailabilityEvent;
-import bgu.spl.mics.application.messages.DeliveryEvent;
-import bgu.spl.mics.application.messages.TakeBookEvent;
+import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.passiveObjects.*;
 
 /**
@@ -29,6 +27,9 @@ public class SellingService extends MicroService {
 	}
 
 	protected void initialize() {
+		subscribeBroadcast(TickBroadcast.class, c -> {
+			if (c.getTickNumber() == c.getTickDuration())
+				terminate();});
 		subscribeEvent(BookOrderEvent.class, c -> {
 			CheckAvailabilityEvent checkAvailabilityEvent = new CheckAvailabilityEvent(getName(), c.getBookTitle());
 			Future<Integer> checkAvailabilityEventFuture = sendEvent(checkAvailabilityEvent);

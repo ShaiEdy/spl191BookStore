@@ -28,11 +28,9 @@ public class ResourceService extends MicroService{
 
 	@Override
 	protected void initialize() {
-		subscribeBroadcast(TickBroadcast.class, new Callback<TickBroadcast>() {
-			@Override
-			public void call(TickBroadcast c) {
-				//todo- if the time end- do unregister.
-			}
+		subscribeBroadcast(TickBroadcast.class, c -> {
+			if (c.getTickNumber() == c.getTickDuration())
+				terminate();
 		});
 		subscribeEvent(AcquireVehicleEvent.class, new Callback<AcquireVehicleEvent>() {
 			public void call(AcquireVehicleEvent c) {

@@ -25,8 +25,10 @@ public class LogisticsService extends MicroService {
 
 	@Override
 	protected void initialize() {
-		this.subscribeBroadcast(TickBroadcast.class, c -> System.out.println("im logistic the king"));
-		this.subscribeEvent(DeliveryEvent.class, c -> {
+		subscribeBroadcast(TickBroadcast.class, c -> {
+			if (c.getTickNumber() == c.getTickDuration())
+			terminate();});
+		subscribeEvent(DeliveryEvent.class, c -> {
 			AcquireVehicleEvent acquireVehicleEvent = new AcquireVehicleEvent("LogisticsService");
 			Future<DeliveryVehicle> deliveryVehicleFuture= sendEvent(acquireVehicleEvent);
 			DeliveryVehicle deliveryVehicle= deliveryVehicleFuture.get();

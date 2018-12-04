@@ -4,6 +4,7 @@ import bgu.spl.mics.Callback;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.CheckAvailabilityEvent;
 import bgu.spl.mics.application.messages.TakeBookEvent;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 import bgu.spl.mics.application.passiveObjects.OrderResult;
 
@@ -31,7 +32,10 @@ public class InventoryService extends MicroService {
 	}
 
 	protected void initialize() {
-
+		subscribeBroadcast(TickBroadcast.class, c -> {
+			if (c.getTickNumber() == c.getTickDuration())
+				terminate();
+		});
 		subscribeEvent(CheckAvailabilityEvent.class, c -> {
 			int price = inventory.checkAvailabiltyAndGetPrice(c.getBookTitle());
 			complete(c, price);
