@@ -2,9 +2,7 @@ package bgu.spl.mics.application;
 
 import bgu.spl.mics.JsonReader;
 import bgu.spl.mics.application.passiveObjects.*;
-import bgu.spl.mics.application.services.APIService;
-import bgu.spl.mics.application.services.SellingService;
-import bgu.spl.mics.application.services.TimeService;
+import bgu.spl.mics.application.services.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -75,7 +73,32 @@ public class BookStoreRunner {
             sellingServiceThread.start();
         }
 
-        // --sellingService--
+        // --inventoryService--
+        int numberOfInventoryServices = servicesArray.get("inventoryService").getAsInt();
+        for (int i = 0; i < numberOfInventoryServices; i++) {
+            String name = "InventoryService" + i;
+            InventoryService inventoryService = new InventoryService(name);
+            Thread inventoryServiceThread = new Thread(inventoryService);
+            inventoryServiceThread.start();
+        }
+
+        // --logisticsService--
+        int numberOfLogisticsServices = servicesArray.get("logistics").getAsInt();
+        for (int i = 0; i < numberOfLogisticsServices; i++) {
+            String name = "LogisticService" + i;
+            LogisticsService logisticsService = new LogisticsService(name);
+            Thread logisticsServiceThread = new Thread(logisticsService);
+            logisticsServiceThread.start();
+        }
+
+        // --resourcesService--
+        int numberOfResourcesServices = servicesArray.get("resourcesService").getAsInt();
+        for (int i = 0; i < numberOfResourcesServices; i++) {
+            String name = "ResourceService" + i;
+            ResourceService resourceService = new ResourceService(name);
+            Thread resourceServiceThread = new Thread(resourceService);
+            resourceServiceThread.start();
+        }
 
         // --------- Read the Customers from input.json-------------
 

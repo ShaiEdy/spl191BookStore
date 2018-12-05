@@ -17,6 +17,9 @@ import java.util.concurrent.*;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl implements MessageBus {
+	private static class singletonHolder {
+		private static MessageBusImpl instance = new MessageBusImpl();
+	}
 
 	private ConcurrentHashMap<MicroService, LinkedBlockingQueue<Message>> microServiceToQueue; // hashMap of microServices and the related Queue
 	private ConcurrentHashMap<Class, LinkedBlockingQueue<MicroService>> eventToMicroService; // hashMap of event and the subscribed micro
@@ -24,7 +27,7 @@ public class MessageBusImpl implements MessageBus {
 	private ConcurrentHashMap<Class, Vector<MicroService>> broadCastToMicroService; // hashMap of broadCast and the subscribed micro
 	private ConcurrentHashMap<Message, Future> messageFutureHashMap; // hashMap of a message and the relative future object
 
-	private static MessageBusImpl messageBus = null; // Singleton.
+	//private static MessageBusImpl messageBus = null; // Singleton.
 
 	private MessageBusImpl() { // Constructor
 		microServiceToQueue = new ConcurrentHashMap<>();
@@ -33,10 +36,8 @@ public class MessageBusImpl implements MessageBus {
 		messageFutureHashMap = new ConcurrentHashMap<>();
 	}
 
-	public static MessageBusImpl getMessageBus() { //todo
-		if (messageBus == null)
-			messageBus = new MessageBusImpl();
-		return messageBus;
+	public static MessageBusImpl getInstance() {
+		return singletonHolder.instance;
 	}
 
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {

@@ -19,6 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * You can add ONLY private fields and methods to this class as you see fit.
  */
 public class Inventory {
+	private static class singletonHolder {
+		private static Inventory instance = new Inventory();
+	}
+
+
 	private static Inventory inventory = null; // Singleton.
 	private ConcurrentHashMap<String,BookInventoryInfo> bookInventoryInfo;
 
@@ -30,9 +35,7 @@ public class Inventory {
      * Retrieves the single instance of this class.
      */
 	public static Inventory getInstance() { ///todo better
-		if (inventory == null)
-			inventory = new Inventory();
-		return inventory;
+		return singletonHolder.instance;
 	}
 	
 	/**
