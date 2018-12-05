@@ -24,8 +24,8 @@ public class APIService extends MicroService {
 	private boolean initialized; //todo- maybe delete
 	private Customer customer;
 	private ConcurrentHashMap<Integer,Vector<String>> orderSchedule;  // as read in the input  orderSchedule
-	public APIService(Customer customer) {
-		super("APIService");
+	public APIService(String name,Customer customer) {
+		super(name);
 		this.customer=customer;
 		orderSchedule= new ConcurrentHashMap<>();
 	}

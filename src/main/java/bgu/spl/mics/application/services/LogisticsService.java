@@ -20,7 +20,7 @@ import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 public class LogisticsService extends MicroService {
 
 	public LogisticsService(String name) {
-		super("LogisticsService");
+		super(name);
 	}
 
 	@Override

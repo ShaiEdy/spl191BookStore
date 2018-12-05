@@ -18,8 +18,8 @@ public class TimeService extends MicroService{
 	private int speed;
 	private int duration; // number of ticks until the program
 
-	public TimeService() {
-		super("TimeService");
+	public TimeService(String name) {
+		super(name);
 
 	}
 

@@ -2,7 +2,9 @@ package bgu.spl.mics.application;
 
 import bgu.spl.mics.JsonReader;
 import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
+import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.Inventory;
+import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -18,14 +20,6 @@ import java.util.Iterator;
  */
 public class BookStoreRunner {
     public static void main(String[] args) {
-        Inventory inventory= Inventory.getInstance();
-        BookInventoryInfo book1 = new BookInventoryInfo("Harry poter", 10, 90);
-        BookInventoryInfo book2 = new BookInventoryInfo("The Hunger Games", 90, 102);
-        //BookInventoryInfo [] booksArray= {book1,book2};
-        //inventory.load(booksArray);
-        //inventory.printInventoryToFile("shai&Adi.txt");
-
-
         JsonReader jsonReader = new JsonReader();
         JsonObject jsonObject = jsonReader.readFile();
 
@@ -34,35 +28,35 @@ public class BookStoreRunner {
         Iterator booksIterator = booksArray.iterator(); // we iterate through all the books
         BookInventoryInfo[] bookInventoryInfos = new BookInventoryInfo[booksArray.size()]; // we open array that will be later loaded to inventory
         int counter = 0; // represents the place in the array to insert the book to
-        while (booksIterator.hasNext()){
+        while (booksIterator.hasNext()) {
             JsonObject bookInfo = (JsonObject) booksIterator.next();
             String bookTitle = bookInfo.get("bookTitle").getAsString();
             int bookAmount = bookInfo.get("amount").getAsInt();
             int bookPrice = bookInfo.get("price").getAsInt();
-            BookInventoryInfo bookInventoryInfo = new BookInventoryInfo(bookTitle,bookAmount,bookPrice);
+            BookInventoryInfo bookInventoryInfo = new BookInventoryInfo(bookTitle, bookAmount, bookPrice);
             bookInventoryInfos[counter] = bookInventoryInfo;
             counter++;
         }
+        Inventory inventory = Inventory.getInstance();
+        inventory.load(bookInventoryInfos);
 
-        // --------- Read the vehicles from input.json-------------
+       // --------- Read the vehicles from input.json-------------
         JsonArray vehiclesArray = jsonObject.getAsJsonArray("initialResources"); // vehicles array is jsonObject representing the vehicles.
-        Iterator vehiclesIterator = vehiclesArray.iterator(); // we iterate through all the vehicles
-        BookInventoryInfo[] bookInventoryInfos = new BookInventoryInfo[booksArray.size()]; // we open array that will be later loaded to inventory
-        int counter = 0; // represents the place in the array to insert the book to
-        while (booksIterator.hasNext()){
-            JsonObject bookInfo = (JsonObject) booksIterator.next();
-            String bookTitle = bookInfo.get("bookTitle").getAsString();
-            int bookAmount = bookInfo.get("amount").getAsInt();
-            int bookPrice = bookInfo.get("price").getAsInt();
-            BookInventoryInfo bookInventoryInfo = new BookInventoryInfo(bookTitle,bookAmount,bookPrice);
-            bookInventoryInfos[counter] = bookInventoryInfo;
+        JsonObject carsObject= vehiclesArray.get(0).getAsJsonObject();
+        JsonArray carsArray= carsObject.getAsJsonArray("vehicles");
+        Iterator vehiclesIterator = carsArray.iterator(); // we iterate through all the vehicles
+        DeliveryVehicle[] vehicles= new DeliveryVehicle[carsArray.size()]; // we open array that will be later loaded to inventory
+        counter= 0; // represents the place in the array to insert the car to
+        while (vehiclesIterator.hasNext()){
+            JsonObject vehicleInfo = (JsonObject) vehiclesIterator.next();
+            int license = vehicleInfo.get("license").getAsInt();
+            int speed = vehicleInfo.get("speed").getAsInt();
+            DeliveryVehicle deliveryVehicle = new DeliveryVehicle(license,speed);
+            vehicles[counter] = deliveryVehicle;
             counter++;
         }
-
-        //
-
-
-        int x=5;
+        ResourcesHolder resourcesHolder= ResourcesHolder.getInstance();
+        resourcesHolder.load(vehicles);
 
     }
 }

@@ -21,8 +21,8 @@ public class ResourceService extends MicroService{
 
 	private ResourcesHolder resourcesHolder = ResourcesHolder.getInstance();
 
-	public ResourceService() {
-		super("Change_This_Name");
+	public ResourceService(String name) {
+		super(name);
 		// TODO Implement this
 	}
 
