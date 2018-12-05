@@ -19,10 +19,9 @@ import bgu.spl.mics.application.passiveObjects.*;
  */
 public class SellingService extends MicroService {
 	private MoneyRegister moneyRegister;
-	private int orderId = 0;
 
-	public SellingService() {
-		super("Selling Service");
+	public SellingService(String name) {
+		super(name);
 		moneyRegister = MoneyRegister.getInstance();
 	}
 

@@ -5,6 +5,8 @@ import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
+import bgu.spl.mics.application.services.SellingService;
+import bgu.spl.mics.application.services.TimeService;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -58,5 +60,23 @@ public class BookStoreRunner {
         ResourcesHolder resourcesHolder= ResourcesHolder.getInstance();
         resourcesHolder.load(vehicles);
 
+        // --------- Read the Services from input.json-------------
+        JsonObject servicesArray = jsonObject.getAsJsonObject("services"); // vehicles array is jsonObject representing the vehicles.
+
+        // --timeService--
+        TimeService timeService = new TimeService(servicesArray.getAsJsonObject("time").get("speed").getAsInt(),servicesArray.getAsJsonObject("time").get("duration").getAsInt());
+        Thread timeServiceThread = new Thread(timeService);
+        timeServiceThread.start();
+
+        // --sellingService--
+        int numberOfSellingServices = servicesArray.get("selling").getAsInt();
+        for (int i = 0; i < numberOfSellingServices; i++) {
+            String name = "SellingService" + i;
+            SellingService sellingService = new SellingService(name);
+            Thread sellingServiceThread= new Thread(timeService);
+            sellingServiceThread.start();
+        }
+
+        // --sellingService--
     }
 }
