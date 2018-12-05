@@ -1,10 +1,8 @@
 package bgu.spl.mics.application;
 
 import bgu.spl.mics.JsonReader;
-import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
-import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
-import bgu.spl.mics.application.passiveObjects.Inventory;
-import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
+import bgu.spl.mics.application.passiveObjects.*;
+import bgu.spl.mics.application.services.APIService;
 import bgu.spl.mics.application.services.SellingService;
 import bgu.spl.mics.application.services.TimeService;
 import com.google.gson.JsonArray;
@@ -42,29 +40,29 @@ public class BookStoreRunner {
         Inventory inventory = Inventory.getInstance();
         inventory.load(bookInventoryInfos);
 
-       // --------- Read the vehicles from input.json-------------
+        // --------- Read the vehicles from input.json-------------
         JsonArray vehiclesArray = jsonObject.getAsJsonArray("initialResources"); // vehicles array is jsonObject representing the vehicles.
-        JsonObject carsObject= vehiclesArray.get(0).getAsJsonObject();
-        JsonArray carsArray= carsObject.getAsJsonArray("vehicles");
+        JsonObject carsObject = vehiclesArray.get(0).getAsJsonObject();
+        JsonArray carsArray = carsObject.getAsJsonArray("vehicles");
         Iterator vehiclesIterator = carsArray.iterator(); // we iterate through all the vehicles
-        DeliveryVehicle[] vehicles= new DeliveryVehicle[carsArray.size()]; // we open array that will be later loaded to inventory
-        counter= 0; // represents the place in the array to insert the car to
-        while (vehiclesIterator.hasNext()){
+        DeliveryVehicle[] vehicles = new DeliveryVehicle[carsArray.size()]; // we open array that will be later loaded to inventory
+        counter = 0; // represents the place in the array to insert the car to
+        while (vehiclesIterator.hasNext()) {
             JsonObject vehicleInfo = (JsonObject) vehiclesIterator.next();
             int license = vehicleInfo.get("license").getAsInt();
             int speed = vehicleInfo.get("speed").getAsInt();
-            DeliveryVehicle deliveryVehicle = new DeliveryVehicle(license,speed);
+            DeliveryVehicle deliveryVehicle = new DeliveryVehicle(license, speed);
             vehicles[counter] = deliveryVehicle;
             counter++;
         }
-        ResourcesHolder resourcesHolder= ResourcesHolder.getInstance();
+        ResourcesHolder resourcesHolder = ResourcesHolder.getInstance();
         resourcesHolder.load(vehicles);
 
         // --------- Read the Services from input.json-------------
         JsonObject servicesArray = jsonObject.getAsJsonObject("services"); // vehicles array is jsonObject representing the vehicles.
 
         // --timeService--
-        TimeService timeService = new TimeService(servicesArray.getAsJsonObject("time").get("speed").getAsInt(),servicesArray.getAsJsonObject("time").get("duration").getAsInt());
+        TimeService timeService = new TimeService(servicesArray.getAsJsonObject("time").get("speed").getAsInt(), servicesArray.getAsJsonObject("time").get("duration").getAsInt());
         Thread timeServiceThread = new Thread(timeService);
         timeServiceThread.start();
 
@@ -73,10 +71,34 @@ public class BookStoreRunner {
         for (int i = 0; i < numberOfSellingServices; i++) {
             String name = "SellingService" + i;
             SellingService sellingService = new SellingService(name);
-            Thread sellingServiceThread= new Thread(timeService);
+            Thread sellingServiceThread = new Thread(sellingService);
             sellingServiceThread.start();
         }
 
         // --sellingService--
+
+        // --------- Read the Customers from input.json-------------
+
+        JsonArray customersArray = servicesArray.get("customers").getAsJsonArray();
+        Iterator cusromesrIterator = customersArray.iterator(); // go trough all the customers
+        int counterCustomers = 0;
+        while (cusromesrIterator.hasNext()) {
+            JsonObject jsonCustomer = (JsonObject) cusromesrIterator.next();
+            String name = jsonCustomer.get("name").getAsString();
+            int ID = jsonCustomer.get("id").getAsInt();
+            String address = jsonCustomer.get("address").getAsString();
+            int distance = jsonCustomer.get("distance").getAsInt();
+            JsonObject creditArray = jsonCustomer.get("creditCard").getAsJsonObject();
+            int creditNum = creditArray.get("number").getAsInt();
+            int amount = creditArray.get("amount").getAsInt();
+            Customer customer = new Customer(name, ID, address, distance, amount, creditNum);
+
+            String APIname = "APIService" + counterCustomers;
+            APIService apiService = new APIService(APIname, customer);
+            Thread apiServiceThread = new Thread(apiService);
+            apiServiceThread.start();
+            counterCustomers++;
+        }
+
     }
 }
