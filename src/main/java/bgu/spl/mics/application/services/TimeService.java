@@ -32,7 +32,7 @@ public class TimeService extends MicroService{
 
 	@Override
 	protected void initialize() {
-		while (currentTimeTick!=duration){
+		while (currentTimeTick<=duration){
 			TickBroadcast tickBroadcast= new TickBroadcast(getName(),currentTimeTick,duration);
 			sendBroadcast(tickBroadcast);
 			currentTimeTick= currentTimeTick+1;
@@ -42,6 +42,7 @@ public class TimeService extends MicroService{
 				e.printStackTrace();
 			}
 		}
+		this.terminate();
 	}
 
 }

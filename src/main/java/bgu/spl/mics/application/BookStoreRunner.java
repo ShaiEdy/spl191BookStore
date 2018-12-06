@@ -1,6 +1,5 @@
 package bgu.spl.mics.application;
 
-import bgu.spl.mics.JsonReader;
 import bgu.spl.mics.application.passiveObjects.*;
 import bgu.spl.mics.application.services.*;
 import com.google.gson.JsonArray;
@@ -9,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 /** This is the Main class of the application. You should parse the input file,
@@ -18,8 +16,20 @@ import java.util.Iterator;
  */
 public class BookStoreRunner {
     public static void main(String[] args) {
-        JsonReader jsonReader = new JsonReader();
-        JsonObject jsonObject = jsonReader.readFile();
+
+        JsonParser jsonParser = new JsonParser();
+        File file = new File("src/input.json");
+        InputStream inputStream;
+        try {
+            inputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            inputStream = null;
+        }
+
+        Reader reader = new InputStreamReader(inputStream);
+        JsonElement element = jsonParser.parse(reader);
+        JsonObject jsonObject = element.getAsJsonObject();
+
 
         // --------- Read the books from input.json-------------
         JsonArray booksArray = jsonObject.getAsJsonArray("initialInventory"); // books array is jsonObject representing the books.
@@ -101,7 +111,6 @@ public class BookStoreRunner {
         }
 
         // --------- Read the Customers from input.json-------------
-
         JsonArray customersArray = servicesArray.get("customers").getAsJsonArray();
         Iterator cusromesrIterator = customersArray.iterator(); // go trough all the customers
         int counterCustomers = 0;
