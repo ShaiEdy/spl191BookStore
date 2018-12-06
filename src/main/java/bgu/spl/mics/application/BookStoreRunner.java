@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /** This is the Main class of the application. You should parse the input file,
@@ -18,7 +19,7 @@ public class BookStoreRunner {
     public static void main(String[] args) {
 
         JsonParser jsonParser = new JsonParser();
-        File file = new File("src/input.json");
+        File file = new File("src/input.json"); /// todo- temp
         InputStream inputStream;
         try {
             inputStream = new FileInputStream(file);
@@ -29,6 +30,7 @@ public class BookStoreRunner {
         Reader reader = new InputStreamReader(inputStream);
         JsonElement element = jsonParser.parse(reader);
         JsonObject jsonObject = element.getAsJsonObject();
+        HashMap<Integer,Customer> integerCustomerHashMap= new HashMap<>(); // initialize hashMap that will be printed at the end of the program
 
 
         // --------- Read the books from input.json-------------
@@ -124,13 +126,51 @@ public class BookStoreRunner {
             int creditNum = creditArray.get("number").getAsInt();
             int amount = creditArray.get("amount").getAsInt();
             Customer customer = new Customer(name, ID, address, distance, amount, creditNum);
-
+            integerCustomerHashMap.put(ID,customer);
             String APIname = "APIService" + counterCustomers;
             APIService apiService = new APIService(APIname, customer);
             Thread apiServiceThread = new Thread(apiService);
             apiServiceThread.start();
             counterCustomers++;
         }
+
+        ///main- wait till all the threads are dead
+        // then print everything
+
+        //print inventory
+        inventory.printInventoryToFile("Inventory.txt");
+
+        //print customers hashMap
+        try {
+            FileOutputStream fileOut = new FileOutputStream("customers.txt");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(integerCustomerHashMap);
+            out.close();
+            fileOut.close();
+            System.out.println("\n Customer hashMap Serialization Successful... Checkout your specified output file..\n");
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //print the orderReceipt
+        MoneyRegister moneyRegister= MoneyRegister.getInstance();
+        moneyRegister.printOrderReceipts("orderReceipts");
+
+        //print the moneyRegister
+        try {
+            FileOutputStream fileOut = new FileOutputStream("moneyRegister.txt");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(moneyRegister);
+            out.close();
+            fileOut.close();
+            System.out.println("\n MoneyReg Serialization Successful... Checkout your specified output file..\n");
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 }

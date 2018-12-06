@@ -36,7 +36,7 @@ public class APIService extends MicroService {
 			if (c.getTickNumber() == c.getTickDuration()) terminate();
 			else if(orderSchedule.containsKey(c.getTickNumber())){
 				//if the current time tick is a tick  that has saved in the orderSchedule, make buy function for those books
-				for (String bookName: orderSchedule.get(c.getTickNumber())) //bu each book in the vector
+				for (String bookName: orderSchedule.get(c.getTickNumber())) //buy each book in the vector
 				buy(bookName);
 			}
 		});

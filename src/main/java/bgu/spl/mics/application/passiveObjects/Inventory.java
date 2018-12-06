@@ -1,9 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
@@ -114,5 +112,32 @@ public class Inventory {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		// Deserialization
+		try
+		{
+			// Reading the object from a file
+			FileInputStream file = new FileInputStream(filename);
+			ObjectInputStream in = new ObjectInputStream(file);
+
+			// Method for deserialization of object
+			Object object1 = (Object) in.readObject();
+
+			in.close();
+			file.close();
+
+			System.out.println("Object has been deserialized ");
+
+		}
+
+		catch(IOException ex)
+		{
+			System.out.println("IOException is caught");
+		}
+
+		catch(ClassNotFoundException ex)
+		{
+			System.out.println("ClassNotFoundException is caught");
+		}
+
 	}
 }
