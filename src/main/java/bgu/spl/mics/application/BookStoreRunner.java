@@ -17,8 +17,11 @@ import java.util.Iterator;
  */
 public class BookStoreRunner {
     public static void main(String[] args) {
-        args= new String[6];
+        args= new String[6]; //todo delete
         args[1]="src/input.json"; args[2]= "a.txt"; args[3]= "b.txt"; args[4]="c.txt"; args[5]="d.txt";
+
+        InitializationSingleton initializationSingleton= InitializationSingleton.getInstance();
+        int servicesCounter=0;
         JsonParser jsonParser = new JsonParser();
         File file = new File(args[1]);
         InputStream inputStream;
@@ -72,10 +75,6 @@ public class BookStoreRunner {
         // --------- Read the Services from input.json-------------
         JsonObject servicesArray = jsonObject.getAsJsonObject("services"); // vehicles array is jsonObject representing the vehicles.
 
-        // --timeService--
-        TimeService timeService = new TimeService(servicesArray.getAsJsonObject("time").get("speed").getAsInt(), servicesArray.getAsJsonObject("time").get("duration").getAsInt());
-        Thread timeServiceThread = new Thread(timeService);
-        timeServiceThread.start();
 
         // --sellingService--
         int numberOfSellingServices = servicesArray.get("selling").getAsInt();
@@ -83,6 +82,7 @@ public class BookStoreRunner {
             String name = "SellingService" + i;
             SellingService sellingService = new SellingService(name);
             Thread sellingServiceThread = new Thread(sellingService);
+            servicesCounter++;
             sellingServiceThread.start();
         }
 
@@ -92,6 +92,7 @@ public class BookStoreRunner {
             String name = "InventoryService" + i;
             InventoryService inventoryService = new InventoryService(name);
             Thread inventoryServiceThread = new Thread(inventoryService);
+            servicesCounter++;
             inventoryServiceThread.start();
         }
 
@@ -101,6 +102,7 @@ public class BookStoreRunner {
             String name = "LogisticService" + i;
             LogisticsService logisticsService = new LogisticsService(name);
             Thread logisticsServiceThread = new Thread(logisticsService);
+            servicesCounter++;
             logisticsServiceThread.start();
         }
 
@@ -110,10 +112,11 @@ public class BookStoreRunner {
             String name = "ResourceService" + i;
             ResourceService resourceService = new ResourceService(name);
             Thread resourceServiceThread = new Thread(resourceService);
+            servicesCounter++;
             resourceServiceThread.start();
         }
 
-        // --------- Read the Customers from input.json-------------
+        // --------- Read the Customers (API) from input.json-------------
         JsonArray customersArray = servicesArray.get("customers").getAsJsonArray();
         Iterator cusromesrIterator = customersArray.iterator(); // go trough all the customers
         int counterCustomers = 0;
@@ -131,9 +134,17 @@ public class BookStoreRunner {
             String APIname = "APIService" + counterCustomers;
             APIService apiService = new APIService(APIname, customer);
             Thread apiServiceThread = new Thread(apiService);
+            servicesCounter++;
             apiServiceThread.start();
             counterCustomers++;
         }
+
+        // --timeService--
+        TimeService timeService = new TimeService(servicesArray.getAsJsonObject("time").get("speed").getAsInt(), servicesArray.getAsJsonObject("time").get("duration").getAsInt());
+        Thread timeServiceThread = new Thread(timeService);
+        initializationSingleton.setNumOfServices(servicesCounter);
+        initializationSingleton.isAllinitialize(); //blocking method- wait till all the services are initialized
+        timeServiceThread.start();
 
         ///main- wait till all the threads are dead
         // then print everything

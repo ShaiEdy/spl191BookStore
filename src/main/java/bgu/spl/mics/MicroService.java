@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.InitializationSingleton;
 import bgu.spl.mics.example.messages.ExampleBroadcast;
 import bgu.spl.mics.example.messages.ExampleEvent;
 import jdk.internal.util.xml.impl.Pair;
@@ -29,7 +30,9 @@ public abstract class MicroService implements Runnable {
     private boolean terminated = false;
     private final String name;
     private HashMap<Class,Callback> classCallbackHashMap;
-    MessageBus messageBus = MessageBusImpl.getInstance();
+    private MessageBus messageBus = MessageBusImpl.getInstance();
+    private InitializationSingleton initializationSingleton= InitializationSingleton.getInstance();
+
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
@@ -166,6 +169,7 @@ public abstract class MicroService implements Runnable {
     public final void run() {
         messageBus.register(this);
         initialize();
+        initializationSingleton.serviceInitialized();
         while (!terminated) {
             try {
                 Message newMessage = messageBus.awaitMessage(this);
