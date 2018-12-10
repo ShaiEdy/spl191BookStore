@@ -17,9 +17,10 @@ import java.util.Iterator;
  */
 public class BookStoreRunner {
     public static void main(String[] args) {
-
+        args= new String[6];
+        args[1]="src/input.json"; args[2]= "a.txt"; args[3]= "b.txt"; args[4]="c.txt"; args[5]="d.txt";
         JsonParser jsonParser = new JsonParser();
-        File file = new File("src/input.json"); /// todo- temp
+        File file = new File(args[1]);
         InputStream inputStream;
         try {
             inputStream = new FileInputStream(file);
@@ -138,11 +139,11 @@ public class BookStoreRunner {
         // then print everything
 
         //print inventory
-        inventory.printInventoryToFile("Inventory.txt");
+        inventory.printInventoryToFile(args[3]);
 
         //print customers hashMap
         try {
-            FileOutputStream fileOut = new FileOutputStream("customers.txt");
+            FileOutputStream fileOut = new FileOutputStream(args[2]);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(integerCustomerHashMap);
             out.close();
@@ -155,11 +156,11 @@ public class BookStoreRunner {
 
         //print the orderReceipt
         MoneyRegister moneyRegister= MoneyRegister.getInstance();
-        moneyRegister.printOrderReceipts("orderReceipts");
+        moneyRegister.printOrderReceipts(args[4]);
 
         //print the moneyRegister
         try {
-            FileOutputStream fileOut = new FileOutputStream("moneyRegister.txt");
+            FileOutputStream fileOut = new FileOutputStream(args[5]);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(moneyRegister);
             out.close();
