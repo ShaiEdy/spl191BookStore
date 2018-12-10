@@ -20,8 +20,10 @@ public class BookStoreRunner {
         args= new String[6]; //todo delete
         args[1]="src/input.json"; args[2]= "a.txt"; args[3]= "b.txt"; args[4]="c.txt"; args[5]="d.txt";
 
-        InitializationSingleton initializationSingleton= InitializationSingleton.getInstance();
-        int servicesCounter=0;
+        InitializationSingleton initializationSingleton= InitializationSingleton.getInstance(); // singleTone for counting the servers - we use it to make sure the servers dont miss the first timeTick
+        int servicesCounter=0; // the counter
+
+        //--------------------------------Parsing the json file----------------------------------------------
         JsonParser jsonParser = new JsonParser();
         File file = new File(args[1]);
         InputStream inputStream;
@@ -35,7 +37,6 @@ public class BookStoreRunner {
         JsonElement element = jsonParser.parse(reader);
         JsonObject jsonObject = element.getAsJsonObject();
         HashMap<Integer,Customer> integerCustomerHashMap= new HashMap<>(); // initialize hashMap that will be printed at the end of the program
-
 
         // --------- Read the books from input.json-------------
         JsonArray booksArray = jsonObject.getAsJsonArray("initialInventory"); // books array is jsonObject representing the books.
@@ -74,7 +75,6 @@ public class BookStoreRunner {
 
         // --------- Read the Services from input.json-------------
         JsonObject servicesArray = jsonObject.getAsJsonObject("services"); // vehicles array is jsonObject representing the vehicles.
-
 
         // --sellingService--
         int numberOfSellingServices = servicesArray.get("selling").getAsInt();
@@ -118,10 +118,10 @@ public class BookStoreRunner {
 
         // --------- Read the Customers (API) from input.json-------------
         JsonArray customersArray = servicesArray.get("customers").getAsJsonArray();
-        Iterator cusromesrIterator = customersArray.iterator(); // go trough all the customers
+        Iterator customersIterator = customersArray.iterator(); // go trough all the customers
         int counterCustomers = 0;
-        while (cusromesrIterator.hasNext()) {
-            JsonObject jsonCustomer = (JsonObject) cusromesrIterator.next();
+        while (customersIterator.hasNext()) {
+            JsonObject jsonCustomer = (JsonObject) customersIterator.next();
             String name = jsonCustomer.get("name").getAsString();
             int ID = jsonCustomer.get("id").getAsInt();
             String address = jsonCustomer.get("address").getAsString();
@@ -142,13 +142,14 @@ public class BookStoreRunner {
         // --timeService--
         TimeService timeService = new TimeService(servicesArray.getAsJsonObject("time").get("speed").getAsInt(), servicesArray.getAsJsonObject("time").get("duration").getAsInt());
         Thread timeServiceThread = new Thread(timeService);
-        initializationSingleton.setNumOfServices(servicesCounter);
+        initializationSingleton.setNumOfServices(servicesCounter); // we set the number of time service that have been initialized.
         initializationSingleton.isAllinitialize(); //blocking method- wait till all the services are initialized
         timeServiceThread.start();
 
         ///main- wait till all the threads are dead
         // then print everything
 
+        /*
         //print inventory
         inventory.printInventoryToFile(args[3]);
 
@@ -182,6 +183,7 @@ public class BookStoreRunner {
             e.printStackTrace();
         }
 
+        */
 
 
     }

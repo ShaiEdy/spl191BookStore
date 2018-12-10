@@ -35,7 +35,9 @@ public class InitializationSingleton {
         initializedCounter.incrementAndGet();
         if (initializedCounter.get()== numOfServices){
             this.allInitialize= true;
-            notifyAll();
+            synchronized (this) {
+                this.notifyAll();
+            }
         }
     }
 
@@ -43,7 +45,7 @@ public class InitializationSingleton {
     public synchronized void isAllinitialize(){
         while (!allInitialize){
             try {
-                wait();
+                this.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
