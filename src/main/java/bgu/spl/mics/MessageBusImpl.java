@@ -88,6 +88,7 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void unregister(MicroService m) {
+		/*
 		if (microServiceToQueue.get(m) != null) { //if was registered
 			microServiceToQueue.remove(m);
 			Iterator<Class> eventSetIter = eventToMicroService.keySet().iterator(); // we iterate through all the keys and remove m where it found
@@ -101,6 +102,7 @@ public class MessageBusImpl implements MessageBus {
 				broadCastToMicroService.get(c).remove(m);
 			}
 		}
+		*/
 	}
 
 
