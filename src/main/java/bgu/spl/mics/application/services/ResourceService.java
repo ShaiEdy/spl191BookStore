@@ -4,6 +4,7 @@ import bgu.spl.mics.Callback;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AcquireVehicleEvent;
+import bgu.spl.mics.application.messages.ReleaseVehicleEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 import bgu.spl.mics.example.messages.ExampleEvent;
@@ -36,6 +37,11 @@ public class ResourceService extends MicroService{
 			public void call(AcquireVehicleEvent c) {
 				Future future = resourcesHolder.acquireVehicle();
 				complete(c, future.get());
+			}
+		});
+		subscribeEvent(ReleaseVehicleEvent.class, new Callback<ReleaseVehicleEvent>() {
+			public void call(ReleaseVehicleEvent c) {
+				resourcesHolder.releaseVehicle(c.getVehicle());
 			}
 		});
 	}

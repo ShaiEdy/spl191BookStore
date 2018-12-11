@@ -61,9 +61,11 @@ public class MessageBusImpl implements MessageBus {
 		if (!broadCastToMicroService.containsKey(b.getClass())) return;
 		Vector<MicroService> microServiceVector = broadCastToMicroService.get(b.getClass());
 		Iterator microServiceVectorIterator = microServiceVector.iterator();
-		while (microServiceVectorIterator.hasNext()) {
-			MicroService microService = (MicroService) microServiceVectorIterator.next();
-			microServiceToQueue.get(microService).add(b);
+		synchronized (microServiceVector) { //synchronizing it to prevent removing microServices from the vector while iterating.
+			while (microServiceVectorIterator.hasNext()) {
+				MicroService microService = (MicroService) microServiceVectorIterator.next();
+				microServiceToQueue.get(microService).add(b);
+			}
 		}
 	}
 
@@ -72,37 +74,48 @@ public class MessageBusImpl implements MessageBus {
 		Future future = new Future();
 		messageFutureHashMap.put(e, future);
 		MicroService microService = null;
-		try { // todo: we need to return null if no microService ever subscribed to this event.
-			microService = eventToMicroService.get(e.getClass()).take();
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+		LinkedBlockingQueue<MicroService> microServiceQueueByEvent = eventToMicroService.get(e.getClass());
+		synchronized (microServiceQueueByEvent) {
+			microService = microServiceQueueByEvent.poll();
+			if (microService == null) return null; // if microService=null it means that all the
+			else eventToMicroService.get(e.getClass()).add(microService);  // return the microService to the queue of the event
+			LinkedBlockingQueue messageQueueOfMicroService =  microServiceToQueue.get(microService);
+			synchronized (messageQueueOfMicroService) {
+				messageQueueOfMicroService.add(e); // we don't want nobody to touch the queue while we add to it.
+			}
 		}
-		microServiceToQueue.get(microService).add(e);
-		eventToMicroService.get(e.getClass()).add(microService);  // return the microService to the queue of the event
 		return future;
 	}
-
 	public void register(MicroService m) {
 		microServiceToQueue.put(m, new LinkedBlockingQueue<>()); //add new place in hashMap for m and his queue
 	}
-
-	@Override
 	public void unregister(MicroService m) {
-		/*
 		if (microServiceToQueue.get(m) != null) { //if was registered
-			microServiceToQueue.remove(m);
+
 			Iterator<Class> eventSetIter = eventToMicroService.keySet().iterator(); // we iterate through all the keys and remove m where it found
 			while (eventSetIter.hasNext()) {
 				Class c = eventSetIter.next();
-				eventToMicroService.get(c).remove(m);
+				LinkedBlockingQueue<MicroService> microServiceQueueByEvent = eventToMicroService.get(c);
+				synchronized (microServiceQueueByEvent) {
+					microServiceQueueByEvent.remove(m); // We don't want to remove m from the queue if event is being sent in the same time.
+				}
 			}
+
 			Iterator<Class> BroadCastSetIter = broadCastToMicroService.keySet().iterator(); // we iterate through all the keys and remove m where it found
 			while (BroadCastSetIter.hasNext()) {
 				Class c = BroadCastSetIter.next();
-				broadCastToMicroService.get(c).remove(m);
+				Vector<MicroService> microServiceVector = broadCastToMicroService.get(c);
+				synchronized (microServiceVector) { // We don't want to remove a microService while its being iterated by sendBroadcast
+					microServiceVector.remove(m);
+				}
+			}
+
+			LinkedBlockingQueue messageQueueOfMicroService = microServiceToQueue.get(m);
+			synchronized (messageQueueOfMicroService) { // we don't want nobody to touch the queue while we remove it.
+				microServiceToQueue.remove(m);
 			}
 		}
-		*/
+
 	}
 
 

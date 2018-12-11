@@ -43,9 +43,8 @@ public class DeliveryVehicle {
 	public void deliver(String address, int distance) {
 		synchronized (this) {
 			int timeToSleep = distance * speed;  //time to sleep= how many ticks to sleep
-			timeToSleep=timeToSleep;
 			try {
-				Thread.sleep(timeToSleep); //TODO: timeTOSleep in terms of time of tick and not thread.sleep
+				Thread.sleep(timeToSleep);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

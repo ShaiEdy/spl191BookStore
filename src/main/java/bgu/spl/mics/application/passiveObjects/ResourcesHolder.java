@@ -45,7 +45,7 @@ public class ResourcesHolder {
 	public Future<DeliveryVehicle> acquireVehicle() {
 		Future future = new Future();
 		try {
-			DeliveryVehicle deliveryVehicle = cars.take();
+			DeliveryVehicle deliveryVehicle = cars.take();//wait till it available
 			future.resolve(deliveryVehicle);
 		} catch (InterruptedException e) {
 			e.printStackTrace();

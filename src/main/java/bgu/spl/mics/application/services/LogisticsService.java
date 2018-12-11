@@ -1,10 +1,12 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Callback;
+import bgu.spl.mics.Event;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AcquireVehicleEvent;
 import bgu.spl.mics.application.messages.DeliveryEvent;
+import bgu.spl.mics.application.messages.ReleaseVehicleEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 
@@ -29,10 +31,11 @@ public class LogisticsService extends MicroService {
 			if (c.getTickNumber() == c.getTickDuration())
 			terminate();});
 		subscribeEvent(DeliveryEvent.class, c -> {
-			AcquireVehicleEvent acquireVehicleEvent = new AcquireVehicleEvent("LogisticsService");
+			AcquireVehicleEvent acquireVehicleEvent = new AcquireVehicleEvent(getName());
 			Future<DeliveryVehicle> deliveryVehicleFuture= sendEvent(acquireVehicleEvent);
 			DeliveryVehicle deliveryVehicle= deliveryVehicleFuture.get();
-			deliveryVehicle.deliver(c.getAddress(),c.getDistance());
+			deliveryVehicle.deliver(c.getAddress(),c.getDistance());// here it will sleep for the deliver time
+			sendEvent(new ReleaseVehicleEvent(getName(),deliveryVehicle));
 		}); 
 	}
 }
