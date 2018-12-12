@@ -9,6 +9,7 @@ import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * APIService is in charge of the connection between a client and the store.
@@ -48,7 +49,7 @@ public class APIService extends MicroService {
 	private void buy (String bookTitle){  // this method will be call from the main?
 		BookOrderEvent bookOrderEvent= new BookOrderEvent("APIService", bookTitle, customer);
 		Future<OrderReceipt> orderReceiptFuture= sendEvent(bookOrderEvent);
-		OrderReceipt orderReceipt= orderReceiptFuture.get();
+		OrderReceipt orderReceipt= orderReceiptFuture.get(100, TimeUnit.MILLISECONDS);
 		if (orderReceipt!=null) customer.addReciept(orderReceipt);
 	}
 }

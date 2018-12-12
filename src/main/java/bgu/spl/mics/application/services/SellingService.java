@@ -43,7 +43,7 @@ public class SellingService extends MicroService {
 						TakeBookEvent takeBookEvent = new TakeBookEvent(getName(), c.getBookTitle());
 						Future<OrderResult> takeBookEventFuture = sendEvent(takeBookEvent);
 						OrderResult orderResult = takeBookEventFuture.get();
-						// notice that if inventoryService have been unregistered than orderResult will be null
+						// notice that if inventoryService have been unregistered than orderResult will be not successfully taken
 						if (orderResult == OrderResult.SUCCESSFULLY_TAKEN) {
 							moneyRegister.chargeCreditCard(customer, amount); // function setAvailableCreditAmount in customer is synchronized
 							OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price);
