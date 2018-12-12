@@ -33,7 +33,7 @@ public class LogisticsService extends MicroService {
 		subscribeEvent(DeliveryEvent.class, c -> {
 			AcquireVehicleEvent acquireVehicleEvent = new AcquireVehicleEvent(getName());
 			Future<DeliveryVehicle> deliveryVehicleFuture= sendEvent(acquireVehicleEvent);
-			DeliveryVehicle deliveryVehicle = deliveryVehicleFuture.get(100, TimeUnit.MILLISECONDS); // this is not a blocking method
+			DeliveryVehicle deliveryVehicle = deliveryVehicleFuture.get(); // this is not a blocking method
 			deliveryVehicle.deliver(c.getAddress(),c.getDistance());// here it will sleep for the deliver time
 			sendEvent(new ReleaseVehicleEvent(getName(),deliveryVehicle));
 		}); 
