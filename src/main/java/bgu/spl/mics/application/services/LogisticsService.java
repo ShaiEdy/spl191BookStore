@@ -8,6 +8,8 @@ import bgu.spl.mics.application.messages.ReleaseVehicleEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Logistic service in charge of delivering books that have been purchased to customers.
  * Handles {@link DeliveryEvent}.
@@ -31,7 +33,7 @@ public class LogisticsService extends MicroService {
 		subscribeEvent(DeliveryEvent.class, c -> {
 			AcquireVehicleEvent acquireVehicleEvent = new AcquireVehicleEvent(getName());
 			Future<DeliveryVehicle> deliveryVehicleFuture= sendEvent(acquireVehicleEvent);
-			DeliveryVehicle deliveryVehicle = deliveryVehicleFuture.get(); // this is a blocking method
+			DeliveryVehicle deliveryVehicle = deliveryVehicleFuture.get(100, TimeUnit.MILLISECONDS); // this is not a blocking method
 			deliveryVehicle.deliver(c.getAddress(),c.getDistance());// here it will sleep for the deliver time
 			sendEvent(new ReleaseVehicleEvent(getName(),deliveryVehicle));
 		}); 

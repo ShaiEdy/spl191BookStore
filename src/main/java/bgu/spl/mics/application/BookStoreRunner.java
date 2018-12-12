@@ -146,9 +146,7 @@ public class BookStoreRunner {
         initializationSingleton.isAllinitialize(); //blocking method- wait till all the services are initialized
         timeServiceThread.start();
 
-        while (Thread.activeCount()>1){
 
-        }
 
         ///main- wait till all the threads are dead
         // then print everything
@@ -191,6 +189,6 @@ public class BookStoreRunner {
         }
 
 
-        //System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
+        System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
     }
 }
