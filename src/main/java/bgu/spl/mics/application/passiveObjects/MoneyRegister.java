@@ -18,11 +18,15 @@ import java.util.Vector;
  */
 public class MoneyRegister implements Serializable {
 	private Vector<OrderReceipt> orderReceipts;
-	private int totalEarning=0;
+	private int totalEarning;
 	private static class singletonHolder {
 		private static MoneyRegister instance = new MoneyRegister();
 	}
+
+
 	private MoneyRegister() {
+		totalEarning = 0;
+		orderReceipts = new Vector<>();
 	}
 
 	/**

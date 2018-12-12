@@ -81,7 +81,7 @@ public class BookStoreRunner {
         for (int i = 0; i < numberOfSellingServices; i++) {
             String name = "SellingService" + i;
             SellingService sellingService = new SellingService(name);
-            Thread sellingServiceThread = new Thread(sellingService);
+            Thread sellingServiceThread = new Thread(sellingService, name);
             servicesCounter++;
             sellingServiceThread.start();
         }
@@ -91,7 +91,7 @@ public class BookStoreRunner {
         for (int i = 0; i < numberOfInventoryServices; i++) {
             String name = "InventoryService" + i;
             InventoryService inventoryService = new InventoryService(name);
-            Thread inventoryServiceThread = new Thread(inventoryService);
+            Thread inventoryServiceThread = new Thread(inventoryService, name);
             servicesCounter++;
             inventoryServiceThread.start();
         }
@@ -101,7 +101,7 @@ public class BookStoreRunner {
         for (int i = 0; i < numberOfLogisticsServices; i++) {
             String name = "LogisticService" + i;
             LogisticsService logisticsService = new LogisticsService(name);
-            Thread logisticsServiceThread = new Thread(logisticsService);
+            Thread logisticsServiceThread = new Thread(logisticsService, name);
             servicesCounter++;
             logisticsServiceThread.start();
         }
@@ -111,7 +111,7 @@ public class BookStoreRunner {
         for (int i = 0; i < numberOfResourcesServices; i++) {
             String name = "ResourceService" + i;
             ResourceService resourceService = new ResourceService(name);
-            Thread resourceServiceThread = new Thread(resourceService);
+            Thread resourceServiceThread = new Thread(resourceService, name);
             servicesCounter++;
             resourceServiceThread.start();
         }
@@ -133,7 +133,7 @@ public class BookStoreRunner {
             integerCustomerHashMap.put(ID,customer);
             String APIname = "APIService" + counterCustomers;
             APIService apiService = new APIService(APIname, customer);
-            Thread apiServiceThread = new Thread(apiService);
+            Thread apiServiceThread = new Thread(apiService, name);
             servicesCounter++;
             apiServiceThread.start();
             counterCustomers++;
@@ -141,10 +141,14 @@ public class BookStoreRunner {
 
         // --timeService--
         TimeService timeService = new TimeService(servicesArray.getAsJsonObject("time").get("speed").getAsInt(), servicesArray.getAsJsonObject("time").get("duration").getAsInt());
-        Thread timeServiceThread = new Thread(timeService);
+        Thread timeServiceThread = new Thread(timeService, "TimeService");
         initializationSingleton.setNumOfServices(servicesCounter); // we set the number of time service that have been initialized.
         initializationSingleton.isAllinitialize(); //blocking method- wait till all the services are initialized
         timeServiceThread.start();
+
+        while (Thread.activeCount()>1){
+
+        }
 
         ///main- wait till all the threads are dead
         // then print everything
@@ -187,7 +191,6 @@ public class BookStoreRunner {
         }
 
 
-
-        System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
+        //System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
     }
 }
