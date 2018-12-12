@@ -121,6 +121,7 @@ public class MessageBusImpl implements MessageBus {
 				}
 
 				microServiceToQueue.remove(m); // we remove the microService itself.
+				//m
 			}
 		}
 	}
