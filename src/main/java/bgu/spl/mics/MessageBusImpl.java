@@ -86,9 +86,11 @@ public class MessageBusImpl implements MessageBus {
 		}
 		return future;
 	}
+
 	public void register(MicroService m) {
 		microServiceToQueue.put(m, new LinkedBlockingQueue<>()); //add new place in hashMap for m and his queue
 	}
+
 	public void unregister(MicroService m) {
 		if (microServiceToQueue.get(m) != null) { //if was registered
 
@@ -112,10 +114,15 @@ public class MessageBusImpl implements MessageBus {
 
 			LinkedBlockingQueue messageQueueOfMicroService = microServiceToQueue.get(m);
 			synchronized (messageQueueOfMicroService) { // we don't want nobody to touch the queue while we remove it.
-				microServiceToQueue.remove(m);
+				for (Object o : messageQueueOfMicroService) { // we iterate through all the messages that were left in the queue and putting null in their future elements.
+					Message message = (Message) o;
+					if (message instanceof Event)
+						complete((Event) message, null);
+				}
+
+				microServiceToQueue.remove(m); // we remove the microService itself.
 			}
 		}
-
 	}
 
 	public Message awaitMessage(MicroService m) throws InterruptedException {
