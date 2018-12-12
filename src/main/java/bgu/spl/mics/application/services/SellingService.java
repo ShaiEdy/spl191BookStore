@@ -35,20 +35,25 @@ public class SellingService extends MicroService {
 			if (price == -1) complete(c, null); // if book doesnt exist or not in stock
 			else {
 				Customer customer = c.getCustomer();
-				int amount = customer.getAvailableCreditAmount();
-				if (price > amount)  // if Customer doesn't have enough money.
-					complete(c, null);
-				else { // we need to process the purchase
-					TakeBookEvent takeBookEvent = new TakeBookEvent(getName(), c.getBookTitle());
-					Future<OrderResult> takeBookEventFuture = sendEvent(takeBookEvent);
-					OrderResult orderResult = takeBookEventFuture.get();
-					if (orderResult == OrderResult.SUCCESSFULLY_TAKEN) {
-						moneyRegister.chargeCreditCard(customer, amount); // function setAvailableCreditAmount in customer is synchronized
-						OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price);
-						moneyRegister.file(orderReceipt);
-						complete(c, orderReceipt);
-						DeliveryEvent deliveryEvent = new DeliveryEvent(customer.getAddress(), customer.getDistance());
-						sendEvent(deliveryEvent);
+				synchronized (customer) {
+					int amount = customer.getAvailableCreditAmount();
+					if (price > amount)  // if Customer doesn't have enough money.
+						complete(c, null);
+					else { // we need to process the purchase
+						TakeBookEvent takeBookEvent = new TakeBookEvent(getName(), c.getBookTitle());
+						Future<OrderResult> takeBookEventFuture = sendEvent(takeBookEvent);
+						OrderResult orderResult = takeBookEventFuture.get();
+						// notice that if inventoryService have been unregistered than orderResult will be null
+						if (orderResult == OrderResult.SUCCESSFULLY_TAKEN) {
+							moneyRegister.chargeCreditCard(customer, amount); // function setAvailableCreditAmount in customer is synchronized
+							OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price);
+							moneyRegister.file(orderReceipt);
+							complete(c, orderReceipt);
+							DeliveryEvent deliveryEvent = new DeliveryEvent(customer.getAddress(), customer.getDistance());
+							sendEvent(deliveryEvent);
+						}
+						else complete(c, null); // the order was'nt successful
+
 					}
 				}
 			}
