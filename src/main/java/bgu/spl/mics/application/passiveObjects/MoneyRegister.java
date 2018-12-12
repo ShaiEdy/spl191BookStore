@@ -4,6 +4,7 @@ package bgu.spl.mics.application.passiveObjects;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Vector;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Vector;
  * <p>
  * You can add ONLY private fields and methods to this class as you see fit.
  */
-public class MoneyRegister {
+public class MoneyRegister implements Serializable {
 	private Vector<OrderReceipt> orderReceipts;
 	private int totalEarning=0;
 	private static class singletonHolder {

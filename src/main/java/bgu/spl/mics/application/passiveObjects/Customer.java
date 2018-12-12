@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
@@ -9,7 +10,7 @@ import java.util.Vector;
  * <p>
  * You may add fields and methods to this class as you see fit (including public methods).
  */
-public class Customer {
+public class Customer implements Serializable {
 	private String name;
 	private int ID;
 	private String address;

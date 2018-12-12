@@ -149,7 +149,6 @@ public class BookStoreRunner {
         ///main- wait till all the threads are dead
         // then print everything
 
-        /*
         //print inventory
         inventory.printInventoryToFile(args[3]);
 
@@ -172,9 +171,13 @@ public class BookStoreRunner {
 
         //print the moneyRegister
         try {
+            //Saving of object in a file
             FileOutputStream fileOut = new FileOutputStream(args[5]);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
+
+            // Method for serialization of object
             out.writeObject(moneyRegister);
+
             out.close();
             fileOut.close();
             System.out.println("\n MoneyReg Serialization Successful... Checkout your specified output file..\n");
@@ -183,8 +186,8 @@ public class BookStoreRunner {
             e.printStackTrace();
         }
 
-        */
 
-        //System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
+
+        System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
     }
 }

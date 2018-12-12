@@ -107,37 +107,16 @@ public class Inventory {
 			FileOutputStream fileOut= new FileOutputStream((filename));
 			ObjectOutputStream  out = new ObjectOutputStream(fileOut);
 			out.writeObject(inventoryHashMap);
+			System.out.println("Object has been serialized ");
+
 			out.close();
 			fileOut.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// Deserialization
-		try
-		{
-			// Reading the object from a file
-			FileInputStream file = new FileInputStream(filename);
-			ObjectInputStream in = new ObjectInputStream(file);
 
-			// Method for deserialization of object
-			Object object1 = (Object) in.readObject();
 
-			in.close();
-			file.close();
 
-			System.out.println("Object has been deserialized ");
-
-		}
-
-		catch(IOException ex)
-		{
-			System.out.println("IOException is caught");
-		}
-
-		catch(ClassNotFoundException ex)
-		{
-			System.out.println("ClassNotFoundException is caught");
-		}
 
 	}
 }
