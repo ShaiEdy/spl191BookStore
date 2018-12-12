@@ -17,16 +17,15 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class ResourcesHolder {
 	private LinkedBlockingQueue<DeliveryVehicle> cars;
-	private int free;
-	private int permits;
+	private LinkedBlockingQueue<Future<DeliveryVehicle>> futureVehiclesQueue;
 
 	private static class singletonHolder {
 		private static ResourcesHolder instance = new ResourcesHolder();
 	}
-	private ResourcesHolder() {
+	private ResourcesHolder()
+	{
 		cars=new LinkedBlockingQueue<>();
-		free=0;
-		permits=0;
+		futureVehiclesQueue= new LinkedBlockingQueue<>();
 	}
 	/**
 	 * Retrieves the single instance of this class.
@@ -44,13 +43,10 @@ public class ResourcesHolder {
      */
 	public Future<DeliveryVehicle> acquireVehicle() {
 		Future future = new Future();
-		try {
-			DeliveryVehicle deliveryVehicle = cars.take();//wait till it available
+		DeliveryVehicle deliveryVehicle = cars.poll();//if not available returns null
+		if (deliveryVehicle != null) {
 			future.resolve(deliveryVehicle);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
+		} else futureVehiclesQueue.add(future);
 		return future;
 	}
 	
@@ -61,7 +57,12 @@ public class ResourcesHolder {
      * @param vehicle	{@link DeliveryVehicle} to be released.
      */
 	public void releaseVehicle(DeliveryVehicle vehicle) {
-		cars.add(vehicle);
+		Future<DeliveryVehicle> vehicleFuture= futureVehiclesQueue.poll();
+		if (vehicleFuture!=null){
+			vehicleFuture.resolve(vehicle);
+		}
+		else cars.add(vehicle);
+
 	}
 	
 	/**

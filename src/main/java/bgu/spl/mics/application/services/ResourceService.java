@@ -6,6 +6,7 @@ import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AcquireVehicleEvent;
 import bgu.spl.mics.application.messages.ReleaseVehicleEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 
 /**
@@ -32,17 +33,11 @@ public class ResourceService extends MicroService{
 			if (c.getTickNumber() == c.getTickDuration())
 				terminate();
 		});
-		subscribeEvent(AcquireVehicleEvent.class, new Callback<AcquireVehicleEvent>() {
-			public void call(AcquireVehicleEvent c) {
-				Future future = resourcesHolder.acquireVehicle();
-				complete(c, future.get());
-			}
+		subscribeEvent(AcquireVehicleEvent.class, c -> {
+			Future<DeliveryVehicle> future = resourcesHolder.acquireVehicle();
+			complete(c, future);
 		});
-		subscribeEvent(ReleaseVehicleEvent.class, new Callback<ReleaseVehicleEvent>() {
-			public void call(ReleaseVehicleEvent c) {
-				resourcesHolder.releaseVehicle(c.getVehicle());
-			}
-		});
+		subscribeEvent(ReleaseVehicleEvent.class, c -> resourcesHolder.releaseVehicle(c.getVehicle()));
 	}
 
 }
