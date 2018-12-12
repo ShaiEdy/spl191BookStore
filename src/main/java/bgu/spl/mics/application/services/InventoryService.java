@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Callback;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.CheckAvailabilityEvent;
 import bgu.spl.mics.application.messages.TakeBookEvent;
@@ -22,8 +21,8 @@ import bgu.spl.mics.application.passiveObjects.OrderResult;
 //checkAvailabilityEvent - Future holds price.
 //TakeBookEvent - Future holds OrderResult.
 
-
 public class InventoryService extends MicroService {
+
 	private Inventory inventory;
 
 	public InventoryService(String name) {
@@ -36,6 +35,7 @@ public class InventoryService extends MicroService {
 			if (c.getTickNumber() == c.getTickDuration())
 				terminate();
 		});
+
 		subscribeEvent(CheckAvailabilityEvent.class, c -> {
 			int price = inventory.checkAvailabiltyAndGetPrice(c.getBookTitle());
 			complete(c, price);

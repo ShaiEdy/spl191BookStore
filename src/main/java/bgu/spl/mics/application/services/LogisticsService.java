@@ -1,7 +1,5 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Callback;
-import bgu.spl.mics.Event;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AcquireVehicleEvent;
@@ -25,15 +23,15 @@ public class LogisticsService extends MicroService {
 		super(name);
 	}
 
-	@Override
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, c -> {
 			if (c.getTickNumber() == c.getTickDuration())
 			terminate();});
+
 		subscribeEvent(DeliveryEvent.class, c -> {
 			AcquireVehicleEvent acquireVehicleEvent = new AcquireVehicleEvent(getName());
 			Future<DeliveryVehicle> deliveryVehicleFuture= sendEvent(acquireVehicleEvent);
-			DeliveryVehicle deliveryVehicle= deliveryVehicleFuture.get();
+			DeliveryVehicle deliveryVehicle = deliveryVehicleFuture.get(); // this is a blocking method
 			deliveryVehicle.deliver(c.getAddress(),c.getDistance());// here it will sleep for the deliver time
 			sendEvent(new ReleaseVehicleEvent(getName(),deliveryVehicle));
 		}); 

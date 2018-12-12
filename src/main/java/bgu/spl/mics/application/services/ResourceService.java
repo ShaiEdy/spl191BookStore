@@ -7,7 +7,6 @@ import bgu.spl.mics.application.messages.AcquireVehicleEvent;
 import bgu.spl.mics.application.messages.ReleaseVehicleEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
-import bgu.spl.mics.example.messages.ExampleEvent;
 
 /**
  * ResourceService is in charge of the store resources - the delivery vehicles.

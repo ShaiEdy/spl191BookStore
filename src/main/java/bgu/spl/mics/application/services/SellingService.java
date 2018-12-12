@@ -1,7 +1,5 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Broadcast;
-import bgu.spl.mics.Callback;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.*;
@@ -18,6 +16,7 @@ import bgu.spl.mics.application.passiveObjects.*;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class SellingService extends MicroService {
+
 	private MoneyRegister moneyRegister;
 
 	public SellingService(String name) {

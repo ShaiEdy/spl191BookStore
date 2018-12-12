@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.services;
 
-
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.BookOrderEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
@@ -8,7 +7,6 @@ import bgu.spl.mics.application.passiveObjects.Customer;
 
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
-
 
 /**
  * APIService is in charge of the connection between a client and the store.
@@ -19,18 +17,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
-
 public class APIService extends MicroService {
+
 	private boolean initialized; //todo- maybe delete
 	private Customer customer;
 	private ConcurrentHashMap<Integer,Vector<String>> orderSchedule;  // as read in the input  orderSchedule
+
 	public APIService(String name,Customer customer) {
 		super(name);
-		this.customer=customer;
-		orderSchedule= new ConcurrentHashMap<>();
+		this.customer = customer;
+		orderSchedule = new ConcurrentHashMap<>();
 	}
 
-	@Override
 	protected void initialize() {
 		this.subscribeBroadcast(TickBroadcast.class, c -> {
 			if (c.getTickNumber() == c.getTickDuration()) terminate();

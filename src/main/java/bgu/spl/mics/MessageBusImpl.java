@@ -58,7 +58,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	public void sendBroadcast(Broadcast b) {
-		if (!broadCastToMicroService.containsKey(b.getClass())) return;
+		if (!broadCastToMicroService.containsKey(b.getClass())) return; //if nobody ever registered to this broadCast return null.
 		Vector<MicroService> microServiceVector = broadCastToMicroService.get(b.getClass());
 		Iterator microServiceVectorIterator = microServiceVector.iterator();
 		synchronized (microServiceVector) { //synchronizing it to prevent removing microServices from the vector while iterating.
@@ -77,8 +77,8 @@ public class MessageBusImpl implements MessageBus {
 		LinkedBlockingQueue<MicroService> microServiceQueueByEvent = eventToMicroService.get(e.getClass());
 		synchronized (microServiceQueueByEvent) {
 			microService = microServiceQueueByEvent.poll();
-			if (microService == null) return null; // if microService=null it means that all the
-			else eventToMicroService.get(e.getClass()).add(microService);  // return the microService to the queue of the event
+			if (microService == null) return null; // if microService=null it means that all the microService that have subscribed to this event have been unregistered.
+			eventToMicroService.get(e.getClass()).add(microService);  // return the microService to the queue of the event
 			LinkedBlockingQueue messageQueueOfMicroService =  microServiceToQueue.get(microService);
 			synchronized (messageQueueOfMicroService) {
 				messageQueueOfMicroService.add(e); // we don't want nobody to touch the queue while we add to it.
