@@ -10,6 +10,7 @@ import com.google.gson.JsonParser;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 
 /** This is the Main class of the application. You should parse the input file,
  * create the different instances of the objects, and run the system.
@@ -22,6 +23,7 @@ public class BookStoreRunner {
 
         InitializationSingleton initializationSingleton= InitializationSingleton.getInstance(); // singleTone for counting the servers - we use it to make sure the servers dont miss the first timeTick
         int servicesCounter=0; // the counter
+        Vector<Thread> threadVector= new Vector<>();
 
         //--------------------------------Parsing the json file----------------------------------------------
         JsonParser jsonParser = new JsonParser();
@@ -82,6 +84,7 @@ public class BookStoreRunner {
             String name = "SellingService" + i;
             SellingService sellingService = new SellingService(name);
             Thread sellingServiceThread = new Thread(sellingService, name);
+            threadVector.add(sellingServiceThread);
             servicesCounter++;
             sellingServiceThread.start();
         }
@@ -92,6 +95,7 @@ public class BookStoreRunner {
             String name = "InventoryService" + i;
             InventoryService inventoryService = new InventoryService(name);
             Thread inventoryServiceThread = new Thread(inventoryService, name);
+            threadVector.add(inventoryServiceThread);
             servicesCounter++;
             inventoryServiceThread.start();
         }
@@ -102,6 +106,7 @@ public class BookStoreRunner {
             String name = "LogisticService" + i;
             LogisticsService logisticsService = new LogisticsService(name);
             Thread logisticsServiceThread = new Thread(logisticsService, name);
+            threadVector.add(logisticsServiceThread);
             servicesCounter++;
             logisticsServiceThread.start();
         }
@@ -112,6 +117,7 @@ public class BookStoreRunner {
             String name = "ResourceService" + i;
             ResourceService resourceService = new ResourceService(name);
             Thread resourceServiceThread = new Thread(resourceService, name);
+            threadVector.add(resourceServiceThread);
             servicesCounter++;
             resourceServiceThread.start();
         }
@@ -134,6 +140,7 @@ public class BookStoreRunner {
             String APIname = "APIService" + counterCustomers;
             APIService apiService = new APIService(APIname, customer);
             Thread apiServiceThread = new Thread(apiService, name);
+            threadVector.add(apiServiceThread);
             servicesCounter++;
             apiServiceThread.start();
             counterCustomers++;
@@ -142,6 +149,7 @@ public class BookStoreRunner {
         // --timeService--
         TimeService timeService = new TimeService(servicesArray.getAsJsonObject("time").get("speed").getAsInt(), servicesArray.getAsJsonObject("time").get("duration").getAsInt());
         Thread timeServiceThread = new Thread(timeService, "TimeService");
+        threadVector.add(timeServiceThread);
         initializationSingleton.setNumOfServices(servicesCounter); // we set the number of time service that have been initialized.
         initializationSingleton.isAllinitialize(); //blocking method- wait till all the services are initialized
         timeServiceThread.start();
@@ -149,6 +157,13 @@ public class BookStoreRunner {
 
 
         ///main- wait till all the threads are dead
+        for (Thread thread: threadVector){
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         // then print everything
 
         //print inventory
