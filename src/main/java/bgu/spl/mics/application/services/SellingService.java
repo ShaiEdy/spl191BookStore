@@ -18,16 +18,20 @@ import bgu.spl.mics.application.passiveObjects.*;
 public class SellingService extends MicroService {
 
 	private MoneyRegister moneyRegister;
+	private int currentTick;
 
 	public SellingService(String name) {
 		super(name);
 		moneyRegister = MoneyRegister.getInstance();
+		currentTick = 0;
 	}
 
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, c -> {
-			if (c.getTickNumber() == c.getTickDuration())
-				terminate();});
+			currentTick = c.getTickNumber();
+			if (currentTick == c.getTickDuration())
+				terminate();
+		});
 		subscribeEvent(BookOrderEvent.class, c -> {
 			CheckAvailabilityEvent checkAvailabilityEvent = new CheckAvailabilityEvent(getName(), c.getBookTitle());
 			Future<Integer> checkAvailabilityEventFuture = sendEvent(checkAvailabilityEvent);
@@ -49,13 +53,11 @@ public class SellingService extends MicroService {
 							Future<Boolean> deliverySucceed = sendEvent(deliveryEvent);
 							if (deliverySucceed.get()) { //only if the delivery succeed:
 								moneyRegister.chargeCreditCard(customer, price); // function setAvailableCreditAmount in customer is synchronized
-								OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price);
+								OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price, currentTick, c.getOrderTick());
 								moneyRegister.file(orderReceipt);
 								complete(c, orderReceipt);
-							}
-							else complete(c, null); // the order was'nt successful
-						}
-						else complete(c, null); // the order was'nt successful
+							} else complete(c, null); // the order was'nt successful
+						} else complete(c, null); // the order was'nt successful
 					}
 				}
 			}

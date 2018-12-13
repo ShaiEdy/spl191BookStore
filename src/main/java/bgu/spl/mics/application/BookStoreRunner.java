@@ -220,7 +220,7 @@ public class BookStoreRunner {
             e.printStackTrace();
         }
 
-
+        int x = 5;
         System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
     }
 }

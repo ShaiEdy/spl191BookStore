@@ -8,11 +8,13 @@ public class BookOrderEvent implements Event {
     private String senderName;
     private String bookTitle;
     private Customer customer;
+    private int tickNumber;
 
-    public BookOrderEvent(String senderName, String bookTitle, Customer customer) {
+    public BookOrderEvent(String senderName, String bookTitle, Customer customer, int tickNumber) {
         this.senderName = senderName;
         this.bookTitle = bookTitle;
         this.customer = customer;
+        this.tickNumber = tickNumber;
     }
 
     public String getSenderName() {
@@ -25,5 +27,9 @@ public class BookOrderEvent implements Event {
 
     public Customer getCustomer() {
         return customer;
+    }
+
+    public int getOrderTick() {
+        return tickNumber;
     }
 }
