@@ -30,7 +30,6 @@ public class InitializationSingleton {
         this.numOfServices= numOfServices;
     }
 
-
     public void serviceInitialized() {
         initializedCounter.incrementAndGet();
         if (initializedCounter.get()== numOfServices){
@@ -40,7 +39,6 @@ public class InitializationSingleton {
             }
         }
     }
-
 
     public synchronized void isAllinitialize(){
         while (!allInitialize){

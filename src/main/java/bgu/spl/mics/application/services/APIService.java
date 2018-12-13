@@ -6,6 +6,7 @@ import bgu.spl.mics.application.messages.BookOrderEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
+import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,9 +44,9 @@ public class APIService extends MicroService {
 	}
 
 	private void buy (String bookTitle){  // this method will be call from the main?
-		BookOrderEvent bookOrderEvent= new BookOrderEvent("APIService", bookTitle, customer);
+		BookOrderEvent bookOrderEvent= new BookOrderEvent(getName(), bookTitle, customer);
 		Future<OrderReceipt> orderReceiptFuture= sendEvent(bookOrderEvent);
-		OrderReceipt orderReceipt= orderReceiptFuture.get(100, TimeUnit.MILLISECONDS);
+		OrderReceipt orderReceipt= orderReceiptFuture.get();
 		if (orderReceipt!=null) customer.addReciept(orderReceipt);
 	}
 }
