@@ -146,6 +146,8 @@ public class BookStoreRunner {
         initializationSingleton.isAllinitialize(); //blocking method- wait till all the services are initialized
         timeServiceThread.start();
 
+
+
         ///main- wait till all the threads are dead
         // then print everything
 

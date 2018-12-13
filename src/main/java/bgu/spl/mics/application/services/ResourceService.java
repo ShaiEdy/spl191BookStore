@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Callback;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.AcquireVehicleEvent;
@@ -8,6 +7,9 @@ import bgu.spl.mics.application.messages.ReleaseVehicleEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
+
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * ResourceService is in charge of the store resources - the delivery vehicles.
@@ -20,24 +22,31 @@ import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
  */
 public class ResourceService extends MicroService{
 
-	private ResourcesHolder resourcesHolder = ResourcesHolder.getInstance();
+	private ResourcesHolder resourcesHolder ;
+	private LinkedBlockingQueue<Future<DeliveryVehicle>> futureVehicleQueue;
 
 	public ResourceService(String name) {
 		super(name);
-		// TODO Implement this
+		resourcesHolder = ResourcesHolder.getInstance();
+		futureVehicleQueue= new LinkedBlockingQueue<>();
+
 	}
 
 	@Override
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, c -> {
-			if (c.getTickNumber() == c.getTickDuration())
+			if (c.getTickNumber() == c.getTickDuration()) {
+				for (Future future : futureVehicleQueue) {
+					if (!future.isDone()) future.resolve(null);  // when unregister- we want to put null in the futures that wait to be resolve
+				}
 				terminate();
+			}
 		});
 		subscribeEvent(AcquireVehicleEvent.class, c -> {
 			Future<DeliveryVehicle> future = resourcesHolder.acquireVehicle();
+			if (!future.isDone()) futureVehicleQueue.offer(future);// if the object inside future is null- it mean that it wait to get a car- we put it in the waiting list
 			complete(c, future);
 		});
 		subscribeEvent(ReleaseVehicleEvent.class, c -> resourcesHolder.releaseVehicle(c.getVehicle()));
 	}
-
 }
