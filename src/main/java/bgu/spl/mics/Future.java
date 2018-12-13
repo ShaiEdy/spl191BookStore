@@ -32,11 +32,13 @@ public class Future<T> {
      * 	       
      */
 	public T get() {
-		while (!isDone()) {
-			try {
-				this.wait(); // Wake up when this future object is being resolved.
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		synchronized (this) {
+			while (!isDone()) {
+				try {
+					this.wait(); // Wake up when this future object is being resolved.
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return result;
