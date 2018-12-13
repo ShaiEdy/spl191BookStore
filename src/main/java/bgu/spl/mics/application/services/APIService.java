@@ -22,14 +22,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class APIService extends MicroService {
 
-	private boolean initialized; //todo- maybe delete
 	private Customer customer;
 	private ConcurrentHashMap<Integer,Vector<String>> orderSchedule;  // as read in the input  orderSchedule
 
-	public APIService(String name,Customer customer) {
+	public APIService(String name,Customer customer,ConcurrentHashMap<Integer,Vector<String>> orderSchedule) {
 		super(name);
 		this.customer = customer;
-		orderSchedule = new ConcurrentHashMap<>();
+		this.orderSchedule = orderSchedule;
 	}
 
 	protected void initialize() {
@@ -41,11 +40,8 @@ public class APIService extends MicroService {
 				buy(bookName);
 			}
 		});
-		initialized=true;
 	}
-	public boolean hasBeenInitialized(){
-		return initialized;
-	}
+
 	private void buy (String bookTitle){  // this method will be call from the main?
 		BookOrderEvent bookOrderEvent= new BookOrderEvent("APIService", bookTitle, customer);
 		Future<OrderReceipt> orderReceiptFuture= sendEvent(bookOrderEvent);
