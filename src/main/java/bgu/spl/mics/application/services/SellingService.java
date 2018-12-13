@@ -19,17 +19,19 @@ public class SellingService extends MicroService {
 
 	private MoneyRegister moneyRegister;
 	private int currentTick;
+
 	public SellingService(String name) {
 		super(name);
 		moneyRegister = MoneyRegister.getInstance();
-		currentTick=0;
+		currentTick = 0;
 	}
 
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, c -> {
 			currentTick = c.getTickNumber();
 			if (currentTick == c.getTickDuration())
-				terminate();});
+				terminate();
+		});
 		subscribeEvent(BookOrderEvent.class, c -> {
 			CheckAvailabilityEvent checkAvailabilityEvent = new CheckAvailabilityEvent(getName(), c.getBookTitle());
 			Future<Integer> checkAvailabilityEventFuture = sendEvent(checkAvailabilityEvent);
@@ -54,10 +56,8 @@ public class SellingService extends MicroService {
 								OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price, currentTick, c.getOrderTick());
 								moneyRegister.file(orderReceipt);
 								complete(c, orderReceipt);
-							}
-							else complete(c, null); // the order was'nt successful
-						}
-						else complete(c, null); // the order was'nt successful
+							} else complete(c, null); // the order was'nt successful
+						} else complete(c, null); // the order was'nt successful
 					}
 				}
 			}
