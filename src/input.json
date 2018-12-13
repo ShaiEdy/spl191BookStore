@@ -4,13 +4,28 @@
   "initialInventory": [
     {
       "bookTitle": "Harry Poter",
-      "amount": 10,
+      "amount": 2,
       "price": 90
     },
     {
       "bookTitle": "The Hunger Games",
-      "amount": 90,
-      "price": 102
+      "amount": 1,
+      "price": 50
+    },
+    {
+      "bookTitle": "Alice",
+      "amount": 0,
+      "price": 60
+    },
+    {
+      "bookTitle": "Princess Adi",
+      "amount": 1,
+      "price": 10
+    },
+    {
+      "bookTitle": "Introduction to Psychology",
+      "amount": 3,
+      "price": 70
     }
   ],
   "initialResources": [
@@ -32,10 +47,10 @@
       "speed": 100,
       "duration": 24
     },
-    "selling": 6,
-    "inventoryService": 3,
-    "logistics": 4,
-    "resourcesService": 2,
+    "selling": 3,
+    "inventoryService": 2,
+    "logistics": 3,
+    "resourcesService": 1,
     "customers": [
       {
         "id": 123456789,
@@ -44,7 +59,7 @@
         "distance": 33,
         "creditCard": {
           "number": 67890,
-          "amount": 100
+          "amount": 130
         },
         "orderSchedule": [
           {
@@ -69,7 +84,7 @@
         "orderSchedule": [
           {
             "bookTitle": "The Hunger Games",
-            "tick": 32
+            "tick": 12
           }
         ]
       }

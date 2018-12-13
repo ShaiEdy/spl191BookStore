@@ -21,12 +21,15 @@ public class OrderReceipt implements Serializable {
 	private int processTick;
 
 
-	public OrderReceipt(int orderId, String sellingServiceName, int customerId, String bookTitle, int price) {
+	public OrderReceipt(int orderId, String sellingServiceName, int customerId, String bookTitle, int price, int issuedTick, int orderTick) {
 		this.orderId = orderId;
 		this.sellingServiceName = sellingServiceName;
 		this.customerId = customerId;
 		this.bookTitle = bookTitle;
 		this.price = price;
+		this.issuedTick = issuedTick;
+		this.processTick = issuedTick;
+		this.orderId = orderTick;
 	}
 
 	/**

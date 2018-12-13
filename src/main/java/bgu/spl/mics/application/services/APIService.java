@@ -24,30 +24,31 @@ import java.util.concurrent.TimeUnit;
 public class APIService extends MicroService {
 
 	private Customer customer;
-	private ConcurrentHashMap<Integer,Vector<String>> orderSchedule;  // as read in the input  orderSchedule
+	private ConcurrentHashMap<Integer, Vector<String>> orderSchedule;  // as read in the input  orderSchedule
 
-	public APIService(String name,Customer customer,ConcurrentHashMap<Integer,Vector<String>> orderSchedule) {
+	public APIService(String name, Customer customer, ConcurrentHashMap<Integer, Vector<String>> orderSchedule) {
 		super(name);
 		this.customer = customer;
 		this.orderSchedule = orderSchedule;
 	}
 
 	protected void initialize() {
+
 		this.subscribeBroadcast(TickBroadcast.class, c -> {
 			if (c.getTickNumber() == c.getTickDuration()) terminate();
-			else if(orderSchedule.containsKey(c.getTickNumber())){
+			else if (orderSchedule.containsKey(c.getTickNumber())) {
 				//if the current time tick is a tick  that has saved in the orderSchedule, make buy function for those books
-				for (String bookName: orderSchedule.get(c.getTickNumber())) //buy each book in the vector
-				buy(bookName);
+				for (String bookName : orderSchedule.get(c.getTickNumber())) //buy each book in the vector
+					buy(bookName, c.getTickNumber());
 			}
 		});
 	}
 
-	private void buy (String bookTitle){  // this method will be call from the main?
-		BookOrderEvent bookOrderEvent= new BookOrderEvent(getName(), bookTitle, customer);
-		Future<OrderReceipt> orderReceiptFuture= sendEvent(bookOrderEvent);
-		OrderReceipt orderReceipt= orderReceiptFuture.get();
-		if (orderReceipt!=null) customer.addReciept(orderReceipt);
+	private void buy(String bookTitle, int tickNumber) {  // this method will be call from the main?
+		BookOrderEvent bookOrderEvent = new BookOrderEvent(getName(), bookTitle, customer, tickNumber);
+		Future<OrderReceipt> orderReceiptFuture = sendEvent(bookOrderEvent);
+		OrderReceipt orderReceipt = orderReceiptFuture.get();
+		if (orderReceipt != null) customer.addReciept(orderReceipt);
 	}
 }
 
