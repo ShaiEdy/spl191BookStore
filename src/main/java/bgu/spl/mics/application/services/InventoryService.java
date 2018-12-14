@@ -29,7 +29,7 @@ public class InventoryService extends MicroService {
 		super(name);
 		inventory = Inventory.getInstance();
 	}
-
+	@SuppressWarnings("unchecked")
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, c -> {
 			if (c.getTickNumber() == c.getTickDuration())

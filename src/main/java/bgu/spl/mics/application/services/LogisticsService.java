@@ -24,7 +24,7 @@ public class LogisticsService extends MicroService {
 	public LogisticsService(String name) {
 		super(name);
 	}
-
+	@SuppressWarnings("unchecked")
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, c -> {
 			if (c.getTickNumber() == c.getTickDuration())

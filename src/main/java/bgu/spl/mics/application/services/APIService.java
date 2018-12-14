@@ -43,7 +43,7 @@ public class APIService extends MicroService {
 			}
 		});
 	}
-
+	@SuppressWarnings("unchecked")
 	private void buy(String bookTitle, int tickNumber) {  // this method will be call from the main?
 		BookOrderEvent bookOrderEvent = new BookOrderEvent(getName(), bookTitle, customer, tickNumber);
 		Future<OrderReceipt> orderReceiptFuture = sendEvent(bookOrderEvent);
