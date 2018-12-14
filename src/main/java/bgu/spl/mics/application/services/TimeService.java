@@ -3,6 +3,9 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.TickBroadcast;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * TimeService is the global system timer There is only one instance of this micro-service.
  * It keeps track of the amount of ticks passed since initialization and notifies
@@ -17,9 +20,11 @@ public class TimeService extends MicroService{
 	private int currentTimeTick;
 	private int speed;
 	private int duration; // number of ticks until the program
+	private Timer timer;
 
 	public TimeService(String name) {
 		super(name);
+		timer= new Timer();
 
 	}
 
@@ -28,21 +33,38 @@ public class TimeService extends MicroService{
 		this.speed = speed;
 		this.duration = duration;
 		currentTimeTick=0;
+		timer= new Timer();
 	}
 
 	@Override
 	protected void initialize() {
-		while (currentTimeTick<=duration){
-			TickBroadcast tickBroadcast= new TickBroadcast(getName(),currentTimeTick,duration);
-			sendBroadcast(tickBroadcast);
-			currentTimeTick= currentTimeTick+1;
-			try {
-				Thread.sleep(speed); // sleep is the number of milliSec between ticks
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		TimerTask task= new TimerTask() {
+			@Override
+			public void run() {
+
+				if (currentTimeTick>duration){
+					timer.cancel();
+					synchronized (this) {
+						this.notifyAll();
+					}
+				}
+				else {
+					TickBroadcast tickBroadcast = new TickBroadcast(getName(), currentTimeTick, duration);
+					sendBroadcast(tickBroadcast);
+					currentTimeTick = currentTimeTick + 1;
+				}
+			}
+		};
+		timer.scheduleAtFixedRate(task,0, speed); //operate rge task (sending broadCast) every tick duration (=speed)
+		synchronized (this){
+			while (currentTimeTick<=duration){
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		this.terminate();
 	}
-
 }
