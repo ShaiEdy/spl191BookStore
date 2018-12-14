@@ -8,7 +8,6 @@ import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -33,6 +32,7 @@ public class ResourceService extends MicroService{
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, c -> {
 			if (c.getTickNumber() == c.getTickDuration()) {

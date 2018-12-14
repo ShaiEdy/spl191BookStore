@@ -20,8 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("unchecked")
 public class BookStoreRunner {
     public static void main(String[] args) {
-        args= new String[6]; //todo delete
-        args[1]="src/input.json"; args[2]= "a.txt"; args[3]= "b.txt"; args[4]="c.txt"; args[5]="d.txt";
+        args= new String[5]; //todo delete
+        args[0]="src/input.json"; args[1]= "/src/a.obj"; args[2]= "/src/b.obj"; args[3]="/src/c.obj"; args[4]="/src/d.obj";
 
         InitializationSingleton initializationSingleton= InitializationSingleton.getInstance(); // singleTone for counting the servers - we use it to make sure the servers dont miss the first timeTick
         int servicesCounter=0; // the counter
@@ -29,7 +29,7 @@ public class BookStoreRunner {
 
         //--------------------------------Parsing the json file----------------------------------------------
         JsonParser jsonParser = new JsonParser();
-        File file = new File(args[1]);
+        File file = new File(args[0]);
         InputStream inputStream;
         try {
             inputStream = new FileInputStream(file);
@@ -185,11 +185,11 @@ public class BookStoreRunner {
         // then print everything
 
         //print inventory
-        inventory.printInventoryToFile(args[3]);
+        inventory.printInventoryToFile(args[2]);
 
         //print customers hashMap
         try {
-            FileOutputStream fileOut = new FileOutputStream(args[2]);
+            FileOutputStream fileOut = new FileOutputStream(args[1]);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(integerCustomerHashMap);
             out.close();
@@ -202,12 +202,12 @@ public class BookStoreRunner {
 
         //print the orderReceipt
         MoneyRegister moneyRegister= MoneyRegister.getInstance();
-        moneyRegister.printOrderReceipts(args[4]);
+        moneyRegister.printOrderReceipts(args[3]);
 
         //print the moneyRegister
         try {
             //Saving of object in a file
-            FileOutputStream fileOut = new FileOutputStream(args[5]);
+            FileOutputStream fileOut = new FileOutputStream(args[4]);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
 
             // Method for serialization of object
