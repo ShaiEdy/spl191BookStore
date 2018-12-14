@@ -1,9 +1,6 @@
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.InitializationSingleton;
-import bgu.spl.mics.example.messages.ExampleBroadcast;
-import bgu.spl.mics.example.messages.ExampleEvent;
-import jdk.internal.util.xml.impl.Pair;
 
 import java.util.HashMap;
 
@@ -166,6 +163,7 @@ public abstract class MicroService implements Runnable {
      * otherwise you will end up in an infinite loop.
      */
     @Override
+    @SuppressWarnings("unchecked")
     public final void run() {
         messageBus.register(this);
         initialize();
@@ -174,7 +172,7 @@ public abstract class MicroService implements Runnable {
             try {
                 Message newMessage = messageBus.awaitMessage(this);
                 Callback callback = classCallbackHashMap.get(newMessage.getClass());
-                callback.call(newMessage); // TODO: Understand WTH is this call back signature supposed to mean.
+                callback.call(newMessage);
             } catch (InterruptedException e) {
                 terminate();
             }

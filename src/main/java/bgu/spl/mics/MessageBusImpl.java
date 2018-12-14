@@ -1,13 +1,7 @@
 package bgu.spl.mics;
 
-import bgu.spl.mics.example.messages.ExampleBroadcast;
-import bgu.spl.mics.example.messages.ExampleEvent;
 
-import javax.jnlp.UnavailableServiceException;
-import javax.management.openmbean.OpenMBeanConstructorInfo;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.*;
 
@@ -27,7 +21,6 @@ public class MessageBusImpl implements MessageBus {
 	private ConcurrentHashMap<Class, Vector<MicroService>> broadCastToMicroService; // hashMap of broadCast and the subscribed micro
 	private ConcurrentHashMap<Message, Future> messageFutureHashMap; // hashMap of a message and the relative future object
 
-	//private static MessageBusImpl messageBus = null; // Singleton.
 
 	private MessageBusImpl() { // Constructor
 		microServiceToQueue = new ConcurrentHashMap<>();
@@ -51,7 +44,7 @@ public class MessageBusImpl implements MessageBus {
 			broadCastToMicroService.put(type, new Vector<>());
 		broadCastToMicroService.get(type).add(m);
 	}
-
+	@SuppressWarnings("unchecked")
 	public <T> void complete(Event<T> e, T result) { // microService call this when it finish the callback
 		Future future = messageFutureHashMap.get(e);
 		future.resolve(result); //set the future that the send event microService got as a promise to result
@@ -68,7 +61,7 @@ public class MessageBusImpl implements MessageBus {
 			}
 		}
 	}
-
+	@SuppressWarnings("unchecked")
 	public <T> Future<T> sendEvent(Event<T> e) {
 		if (!eventToMicroService.containsKey(e.getClass())) return null;// if no microService subscribed to this event return null
 		Future future = new Future();
@@ -90,7 +83,7 @@ public class MessageBusImpl implements MessageBus {
 	public void register(MicroService m) {
 		microServiceToQueue.put(m, new LinkedBlockingQueue<>()); //add new place in hashMap for m and his queue
 	}
-
+	@SuppressWarnings("unchecked")
 	public void unregister(MicroService m) {
 		if (microServiceToQueue.get(m) != null) { //if was registered
 
@@ -111,7 +104,6 @@ public class MessageBusImpl implements MessageBus {
 					microServiceVector.remove(m);
 				}
 			}
-
 			LinkedBlockingQueue messageQueueOfMicroService = microServiceToQueue.get(m);
 			synchronized (messageQueueOfMicroService) { // we don't want nobody to touch the queue while we remove it.
 				for (Object o : messageQueueOfMicroService) { // we iterate through all the messages that were left in the queue and putting null in their future elements.

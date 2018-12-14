@@ -4,7 +4,7 @@
   "initialInventory": [
     {
       "bookTitle": "Harry Poter",
-      "amount": 2,
+      "amount": 1,
       "price": 90
     },
     {
@@ -64,7 +64,7 @@
         "orderSchedule": [
           {
             "bookTitle": "Harry Poter",
-            "tick": 3
+            "tick": 2
           },
           {
             "bookTitle": "The Hunger Games",
