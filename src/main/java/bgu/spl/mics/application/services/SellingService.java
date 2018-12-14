@@ -26,6 +26,7 @@ public class SellingService extends MicroService {
 		currentTick = 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, c -> {
 			currentTick = c.getTickNumber();

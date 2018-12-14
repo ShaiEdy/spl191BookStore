@@ -41,6 +41,7 @@ public class ResourcesHolder {
      * @return 	{@link Future<DeliveryVehicle>} object which will resolve to a 
      * 			{@link DeliveryVehicle} when completed.   
      */
+	@SuppressWarnings("unchecked")
 	public Future<DeliveryVehicle> acquireVehicle() {
 		Future future = new Future();
 		DeliveryVehicle deliveryVehicle = cars.poll();//if not available returns null
