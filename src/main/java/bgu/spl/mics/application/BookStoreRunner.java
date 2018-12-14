@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * create the different instances of the objects, and run the system.
  * In the end, you should output serialized objects.
  */
+@SuppressWarnings("unchecked")
 public class BookStoreRunner {
     public static void main(String[] args) {
         args= new String[6]; //todo delete

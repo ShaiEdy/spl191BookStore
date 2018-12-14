@@ -29,7 +29,7 @@ public class OrderReceipt implements Serializable {
 		this.price = price;
 		this.issuedTick = issuedTick;
 		this.processTick = issuedTick;
-		this.orderId = orderTick;
+		this.orderTick = orderTick;
 	}
 
 	/**
