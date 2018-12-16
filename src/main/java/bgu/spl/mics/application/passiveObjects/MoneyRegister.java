@@ -44,7 +44,7 @@ public class MoneyRegister implements Serializable {
 	public void file (OrderReceipt r) {
 		synchronized (this) {
 			orderReceipts.add(r);
-			totalEarning = totalEarning + r.getPrice();
+			totalEarning = totalEarning + r.getPrice(); //todo: Atomic!!!
 		}
 	}
 

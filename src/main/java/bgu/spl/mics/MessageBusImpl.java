@@ -40,8 +40,10 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		if (!broadCastToMicroService.containsKey(type))
-			broadCastToMicroService.put(type, new Vector<>());
+		synchronized (broadCastToMicroService) {
+			if (!broadCastToMicroService.containsKey(type))
+				broadCastToMicroService.put(type, new Vector<>());
+		}
 		broadCastToMicroService.get(type).add(m);
 	}
 	@SuppressWarnings("unchecked")
