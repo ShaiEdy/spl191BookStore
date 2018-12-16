@@ -90,7 +90,7 @@ public class MessageBusImpl implements MessageBus {
 		microServiceToQueue.put(m, new LinkedBlockingQueue<>()); //add new place in hashMap for m and his queue
 	}
 	@SuppressWarnings("unchecked")
-	public void unregister(MicroService m) {
+	public void unregister(MicroService m) { //
 		if (microServiceToQueue.get(m) != null) { //if was registered
 
 			Iterator<Class> eventSetIter = eventToMicroService.keySet().iterator(); // we iterate through all the keys and remove m where it found
