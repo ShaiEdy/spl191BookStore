@@ -105,9 +105,9 @@ public class MessageBusImpl implements MessageBus {
 			Iterator<Class> BroadCastSetIter = broadCastToMicroService.keySet().iterator(); // we iterate through all the keys and remove m where it found
 			while (BroadCastSetIter.hasNext()) {
 				Class c = BroadCastSetIter.next();
-				Vector<MicroService> microServiceVector = broadCastToMicroService.get(c);
+				Vector<MicroService> microServiceVector = broadCastToMicroService.get(c); //vector of the microServices subscribed to c
 				synchronized (microServiceVector) { // We don't want to remove a microService while its being iterated by sendBroadcast
-					microServiceVector.remove(m);
+					microServiceVector.remove(m); //remove m if exist
 				}
 			}
 			LinkedBlockingQueue messageQueueOfMicroService = microServiceToQueue.get(m);
@@ -117,14 +117,13 @@ public class MessageBusImpl implements MessageBus {
 					if (message instanceof Event)
 						complete((Event) message, null);
 				}
-
 				microServiceToQueue.remove(m); // we remove the microService itself.
-
 			}
 		}
 	}
 
 	public Message awaitMessage(MicroService m) throws InterruptedException {
+
 		try {
 			if (microServiceToQueue.containsKey(m)) { // If TRUE, then m was registered.
 				return microServiceToQueue.get(m).take();// the blockingQueue assure that there is something in the queue or it will wait

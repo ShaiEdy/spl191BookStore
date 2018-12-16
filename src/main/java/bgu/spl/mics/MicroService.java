@@ -170,7 +170,7 @@ public abstract class MicroService implements Runnable {
         initializationSingleton.serviceInitialized();
         while (!terminated) {
             try {
-                Message newMessage = messageBus.awaitMessage(this);
+                Message newMessage = messageBus.awaitMessage(this); //do microServiceToQueue.take()
                 Callback callback = classCallbackHashMap.get(newMessage.getClass());
                 callback.call(newMessage);
             } catch (InterruptedException e) {

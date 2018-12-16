@@ -40,7 +40,7 @@ public class LogisticsService extends MicroService {
 				complete(c,true);
 				sendEvent(new ReleaseVehicleEvent(getName(), deliveryVehicle));
 			}
-			else // I dont have a vehicle
+			else // I dont have a vehicle (inside future inside future i got null)
 				complete(c,false);
 		}); 
 	}

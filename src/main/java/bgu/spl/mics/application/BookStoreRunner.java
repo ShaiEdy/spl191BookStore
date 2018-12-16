@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BookStoreRunner {
     public static void main(String[] args) {
         args= new String[5]; //todo delete
-        args[0]="src/input.json"; args[1]= "/C:/Users/Shai/files/a.txt"; args[2]= "/C:/Users/Shai/files/b.obj"; args[3]="/C:/Users/Shai/files/c.obj"; args[4]="/C:/Users/Shai/files/d.obj";
+        args[0]="src/input.json"; args[1]= "a.txt"; args[2]= "b.obj"; args[3]="c.obj"; args[4]="d.obj";
 
         InitializationSingleton initializationSingleton= InitializationSingleton.getInstance(); // singleTone for counting the servers - we use it to make sure the servers dont miss the first timeTick
         int servicesCounter=0; // the counter
@@ -176,13 +176,11 @@ public class BookStoreRunner {
         for (Thread thread: threadVector){
             try {
                 thread.join();
-                System.out.println("Thread was closed");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         // then print everything
-        System.out.println("All threads were closed");
         //print inventory
         inventory.printInventoryToFile(args[2]);
 
@@ -220,7 +218,6 @@ public class BookStoreRunner {
             e.printStackTrace();
         }
 
-        int x = 5;
         System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
     }
 }
