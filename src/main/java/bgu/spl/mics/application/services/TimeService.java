@@ -20,7 +20,7 @@ public class TimeService extends MicroService{
 	private int currentTimeTick;
 	private int speed;
 	private int duration; // number of ticks until the program
-	private Timer timer;
+	private final Timer timer;
 
 	public TimeService(String name) {
 		super(name);
@@ -44,8 +44,8 @@ public class TimeService extends MicroService{
 
 				if (currentTimeTick>duration){
 					timer.cancel();
-					synchronized (this) {
-						this.notifyAll();
+					synchronized (timer) {
+						timer.notifyAll();
 					}
 				}
 				else {
@@ -56,10 +56,10 @@ public class TimeService extends MicroService{
 			}
 		};
 		timer.scheduleAtFixedRate(task,0, speed); //operate rge task (sending broadCast) every tick duration (=speed)
-		synchronized (this){
+		synchronized (timer){
 			while (currentTimeTick<=duration){
 				try {
-					this.wait();
+					timer.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
