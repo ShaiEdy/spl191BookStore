@@ -51,6 +51,7 @@ public class TimeService extends MicroService{
 				else {
 					TickBroadcast tickBroadcast = new TickBroadcast(getName(), currentTimeTick, duration);
 					sendBroadcast(tickBroadcast);
+					System.out.println(currentTimeTick);
 					currentTimeTick = currentTimeTick + 1;
 				}
 			}
