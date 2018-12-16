@@ -172,18 +172,17 @@ public class BookStoreRunner {
         initializationSingleton.isAllinitialize(); //blocking method- wait till all the services are initialized
         timeServiceThread.start();
 
-
-
         ///main- wait till all the threads are dead
         for (Thread thread: threadVector){
             try {
                 thread.join();
+                System.out.println("Thread was closed");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         // then print everything
-
+        System.out.println("All threads were closed");
         //print inventory
         inventory.printInventoryToFile(args[2]);
 
