@@ -36,32 +36,32 @@ public class SellingService extends MicroService {
 		subscribeEvent(BookOrderEvent.class, c -> {
 			CheckAvailabilityEvent checkAvailabilityEvent = new CheckAvailabilityEvent(getName(), c.getBookTitle());
 			Future<Integer> checkAvailabilityEventFuture = sendEvent(checkAvailabilityEvent);
-			Integer price = checkAvailabilityEventFuture.get();
-			if (price == -1) complete(c, null); // if book doesnt exist or not in stock
-			else {
-				Customer customer = c.getCustomer();
-				synchronized (customer) {
-					int amount = customer.getAvailableCreditAmount();
-					if (price > amount)  // if Customer doesn't have enough money.
-						complete(c, null);
-					else { // we need to process the purchase
-						TakeBookEvent takeBookEvent = new TakeBookEvent(getName(), c.getBookTitle());
-						Future<OrderResult> takeBookEventFuture = sendEvent(takeBookEvent);
-						OrderResult orderResult = takeBookEventFuture.get();
-						// notice that if inventoryService have been unregistered than orderResult will be not successfully taken
-						if (orderResult == OrderResult.SUCCESSFULLY_TAKEN) {
-							DeliveryEvent deliveryEvent = new DeliveryEvent(customer.getAddress(), customer.getDistance());
-							Future<Boolean> deliverySucceed = sendEvent(deliveryEvent);
-							if (deliverySucceed.get()) { //only if the delivery succeed:
-								moneyRegister.chargeCreditCard(customer, price); // function setAvailableCreditAmount in customer is synchronized
-								OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price, currentTick, c.getOrderTick());
-								moneyRegister.file(orderReceipt);
-								complete(c, orderReceipt);
+				Integer price = checkAvailabilityEventFuture.get();
+				if (checkAvailabilityEventFuture.get()==null || price == -1) complete(c, null); // if book doesnt exist or not in stock
+				else {
+					Customer customer = c.getCustomer();
+					synchronized (customer) {
+						int amount = customer.getAvailableCreditAmount();
+						if (price > amount)  // if Customer doesn't have enough money.
+							complete(c, null);
+						else { // we need to process the purchase
+							TakeBookEvent takeBookEvent = new TakeBookEvent(getName(), c.getBookTitle());
+							Future<OrderResult> takeBookEventFuture = sendEvent(takeBookEvent);
+							OrderResult orderResult = takeBookEventFuture.get();
+							// notice that if inventoryService have been unregistered than orderResult will be not successfully taken
+							if (orderResult == OrderResult.SUCCESSFULLY_TAKEN) {
+								DeliveryEvent deliveryEvent = new DeliveryEvent(customer.getAddress(), customer.getDistance());
+								Future<Boolean> deliverySucceed = sendEvent(deliveryEvent); //deliverySucceed will be true or false
+								if (deliverySucceed!=null &&deliverySucceed.get()) { //only if the delivery succeed:
+									moneyRegister.chargeCreditCard(customer, price); // function setAvailableCreditAmount in customer is synchronized
+									OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price, currentTick, c.getOrderTick());
+									moneyRegister.file(orderReceipt);
+									complete(c, orderReceipt);
+								} else complete(c, null); // the order was'nt successful
 							} else complete(c, null); // the order was'nt successful
-						} else complete(c, null); // the order was'nt successful
+						}
 					}
 				}
-			}
 		});
 	}
 }

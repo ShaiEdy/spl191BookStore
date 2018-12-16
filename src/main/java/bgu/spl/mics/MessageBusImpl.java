@@ -63,14 +63,20 @@ public class MessageBusImpl implements MessageBus {
 	}
 	@SuppressWarnings("unchecked")
 	public <T> Future<T> sendEvent(Event<T> e) {
-		if (!eventToMicroService.containsKey(e.getClass())) return null;// if no microService subscribed to this event return null
 		Future future = new Future();
 		messageFutureHashMap.put(e, future);
+		if (!eventToMicroService.containsKey(e.getClass())) {
+			complete(e,null);
+			return future;// if no microService subscribed to this event return null
+		}
 		MicroService microService = null;
 		LinkedBlockingQueue<MicroService> microServiceQueueByEvent = eventToMicroService.get(e.getClass());
 		synchronized (microServiceQueueByEvent) {
 			microService = microServiceQueueByEvent.poll();
-			if (microService == null) return null; // if microService=null it means that all the microService that have subscribed to this event have been unregistered.
+			if (microService == null) {
+				complete(e,null);
+				return future; // if microService=null it means that all the microService that have subscribed to this event have been unregistered.
+			}
 			eventToMicroService.get(e.getClass()).add(microService);  // return the microService to the queue of the event
 			LinkedBlockingQueue messageQueueOfMicroService =  microServiceToQueue.get(microService);
 			synchronized (messageQueueOfMicroService) {
