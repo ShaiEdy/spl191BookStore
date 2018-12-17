@@ -45,8 +45,7 @@ public class SellingService extends MicroService {
 						else { // we need to process the purchase
 							TakeBookEvent takeBookEvent = new TakeBookEvent(getName(), c.getBookTitle());
 							Future<OrderResult> takeBookEventFuture = sendEvent(takeBookEvent);
-							OrderResult orderResult = takeBookEventFuture.get();
-							// notice that if inventoryService have been unregistered than orderResult will be not successfully taken
+							OrderResult orderResult = takeBookEventFuture.get();// notice that if inventoryService have been unregistered than orderResult will be not successfully taken
 							if (orderResult == OrderResult.SUCCESSFULLY_TAKEN) {
 								DeliveryEvent deliveryEvent = new DeliveryEvent(customer.getAddress(), customer.getDistance());
 								Future<Boolean> deliverySucceed = sendEvent(deliveryEvent); //deliverySucceed will be true or false
