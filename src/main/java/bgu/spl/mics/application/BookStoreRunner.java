@@ -182,6 +182,7 @@ public class BookStoreRunner {
         }
         // then print everything
         //print inventory
+
         inventory.printInventoryToFile(args[2]);
 
         //print customers hashMap
@@ -218,6 +219,7 @@ public class BookStoreRunner {
             e.printStackTrace();
         }
 
-        System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
+        int x = 2;//todo delete
+        //System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
     }
 }

@@ -22,8 +22,7 @@ public class ResourcesHolder {
 	private static class singletonHolder {
 		private static ResourcesHolder instance = new ResourcesHolder();
 	}
-	private ResourcesHolder()
-	{
+	private ResourcesHolder()	{
 		cars=new LinkedBlockingQueue<>();
 		futureVehiclesQueue= new LinkedBlockingQueue<>();
 	}
@@ -44,10 +43,12 @@ public class ResourcesHolder {
 	@SuppressWarnings("unchecked")
 	public Future<DeliveryVehicle> acquireVehicle() {
 		Future future = new Future();
-		DeliveryVehicle deliveryVehicle = cars.poll();//if not available returns null
-		if (deliveryVehicle != null) {
-			future.resolve(deliveryVehicle);
-		} else futureVehiclesQueue.add(future);
+		synchronized (this) {
+			DeliveryVehicle deliveryVehicle = cars.poll();//if not available returns null
+			if (deliveryVehicle != null) {
+				future.resolve(deliveryVehicle);
+			} else futureVehiclesQueue.add(future);
+		}
 		return future;
 	}
 	
@@ -59,10 +60,10 @@ public class ResourcesHolder {
      */
 	public void releaseVehicle(DeliveryVehicle vehicle) {
 		Future<DeliveryVehicle> vehicleFuture= futureVehiclesQueue.poll();
-		synchronized (this) { //todo: i added this synchronized
-			if (vehicleFuture != null) {
+		synchronized (this) { //we do synchronize here because we don't want someone to do acquire while releasing
+			if (vehicleFuture != null) { //there is a future that wait to get car so we put the car inside it
 				vehicleFuture.resolve(vehicle);
-			} else cars.add(vehicle);
+			} else cars.add(vehicle);// there is no waiting future so i just add the csr to back to cars
 		}
 
 	}
@@ -73,6 +74,7 @@ public class ResourcesHolder {
      * @param vehicles	Array of {@link DeliveryVehicle} instances to store.
      */
 	public void load(DeliveryVehicle[] vehicles) {
+		cars = new LinkedBlockingQueue<>(); //todo delete
 		cars.addAll(Arrays.asList(vehicles));
 	}
 

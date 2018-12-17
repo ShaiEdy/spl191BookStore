@@ -28,20 +28,23 @@ public class LogisticsService extends MicroService {
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, c -> {
 			if (c.getTickNumber() == c.getTickDuration())
-			terminate();});
+				terminate();
+		});
 
 		subscribeEvent(DeliveryEvent.class, c -> {
 			AcquireVehicleEvent acquireVehicleEvent = new AcquireVehicleEvent(getName());
-			Future<Future<DeliveryVehicle>> deliveryVehicleFuture= sendEvent(acquireVehicleEvent); // We expect to get back A future object that has another future object
+			Future<Future<DeliveryVehicle>> deliveryVehicleFuture = sendEvent(acquireVehicleEvent); // We expect to get back A future object that has another future object
 			//the inner future object will be resolved sometime to a vehicle.
-				DeliveryVehicle deliveryVehicle = deliveryVehicleFuture.get().get(); // this is not a blocking method
-			if (deliveryVehicle!=null) { //I have a vehicle
-				deliveryVehicle.deliver(c.getAddress(), c.getDistance());// here it will sleep for the deliver time
-				complete(c,true);
-				sendEvent(new ReleaseVehicleEvent(getName(), deliveryVehicle));
-			}
-			else // I dont have a vehicle (inside future inside future i got null)
-				complete(c,false);
-		}); 
+			Future<DeliveryVehicle> vehicleFuture = deliveryVehicleFuture.get();
+			if (vehicleFuture != null) {
+				DeliveryVehicle deliveryVehicle = vehicleFuture.get();
+				if (deliveryVehicle != null) { //I have a vehicle
+					deliveryVehicle.deliver(c.getAddress(), c.getDistance());// here it will sleep for the deliver time
+					complete(c, true);
+					sendEvent(new ReleaseVehicleEvent(getName(), deliveryVehicle));
+				} else // I dont have a vehicle (inside future inside future i got null)
+					complete(c, false);
+			} else complete(c, false);
+		});
 	}
 }

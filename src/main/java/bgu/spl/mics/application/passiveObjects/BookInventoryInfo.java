@@ -19,7 +19,7 @@ public class BookInventoryInfo {
 
 	public void setAmountInInventory(int newAmount){
 		amount=newAmount;
-	} //todo- if needed add sync
+	}
 
 
 	/**

@@ -21,7 +21,6 @@ public class Inventory {
 		private static Inventory instance = new Inventory();
 	}
 
-
 	private static Inventory inventory = null; // Singleton.
 	private ConcurrentHashMap<String,BookInventoryInfo> bookInventoryInfo;
 
@@ -32,7 +31,7 @@ public class Inventory {
 	/**
      * Retrieves the single instance of this class.
      */
-	public static Inventory getInstance() { ///todo better
+	public static Inventory getInstance() {
 		return singletonHolder.instance;
 	}
 	
@@ -44,8 +43,9 @@ public class Inventory {
      * 						of the inventory.
      */
 	public void load (BookInventoryInfo[ ] inventory ) {
+		this.bookInventoryInfo = new ConcurrentHashMap<>(); //todo:delete this line
 		for (BookInventoryInfo book : inventory) {
-			bookInventoryInfo.put(book.getBookTitle(), book); //TODO: make sure load wont be called more than one time.
+			bookInventoryInfo.put(book.getBookTitle(), book);
 		}
 
 	}

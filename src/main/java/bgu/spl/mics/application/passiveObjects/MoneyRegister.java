@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Passive object representing the store finance management. 
@@ -18,14 +19,15 @@ import java.util.Vector;
  */
 public class MoneyRegister implements Serializable {
 	private Vector<OrderReceipt> orderReceipts;
-	private int totalEarning;
+	//private int totalEarning;
+	private AtomicInteger totalEarning;
 	private static class singletonHolder {
 		private static MoneyRegister instance = new MoneyRegister();
 	}
 
 
 	private MoneyRegister() {
-		totalEarning = 0;
+		totalEarning = new AtomicInteger(0);
 		orderReceipts = new Vector<>();
 	}
 
@@ -42,17 +44,15 @@ public class MoneyRegister implements Serializable {
 	 * @param r     The receipt to save in the money register.
 	 */
 	public void file (OrderReceipt r) {
-		synchronized (this) {
-			orderReceipts.add(r);
-			totalEarning = totalEarning + r.getPrice(); //todo: Atomic!!!
-		}
+		orderReceipts.add(r);
+		while(!totalEarning.compareAndSet(totalEarning.get(),totalEarning.get()+r.getPrice())){}
 	}
 
 	/**
 	 * Retrieves the current total earnings of the store.
 	 */
 	public int getTotalEarnings() {
-		return totalEarning;
+		return totalEarning.get();
 	}
 
 	/**

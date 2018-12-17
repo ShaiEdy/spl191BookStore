@@ -52,7 +52,7 @@ public class SellingService extends MicroService {
 							if (orderResult == OrderResult.SUCCESSFULLY_TAKEN) {
 								DeliveryEvent deliveryEvent = new DeliveryEvent(customer.getAddress(), customer.getDistance());
 								Future<Boolean> deliverySucceed = sendEvent(deliveryEvent); //deliverySucceed will be true or false
-								if (deliverySucceed.get()) { //only if the delivery succeed:
+								if (deliverySucceed.get()!= null && deliverySucceed.get()) { //only if the delivery succeed:
 									moneyRegister.chargeCreditCard(customer, price); // function setAvailableCreditAmount in customer is synchronized
 									OrderReceipt orderReceipt = new OrderReceipt(0, getName(), c.getCustomer().getId(), c.getBookTitle(), price, currentTick, c.getOrderTick());
 									moneyRegister.file(orderReceipt);
