@@ -30,8 +30,7 @@ public class SellingService extends MicroService {
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, c -> {
 			currentTick = c.getTickNumber();
-			if (currentTick == c.getTickDuration())
-				terminate();
+			if (currentTick == c.getTickDuration()) terminate();
 		});
 		subscribeEvent(BookOrderEvent.class, c -> {
 			CheckAvailabilityEvent checkAvailabilityEvent = new CheckAvailabilityEvent(getName(), c.getBookTitle());
@@ -42,8 +41,7 @@ public class SellingService extends MicroService {
 					Customer customer = c.getCustomer();
 					synchronized (customer) {
 						int amount = customer.getAvailableCreditAmount();
-						if (price > amount)  // if Customer doesn't have enough money.
-							complete(c, null);
+						if (price > amount) complete(c, null); // if Customer doesn't have enough money.
 						else { // we need to process the purchase
 							TakeBookEvent takeBookEvent = new TakeBookEvent(getName(), c.getBookTitle());
 							Future<OrderResult> takeBookEventFuture = sendEvent(takeBookEvent);

@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Passive data-object representing a information about a certain book in the inventory.
  * You must not alter any of the given public methods of this class. 
@@ -8,19 +10,18 @@ package bgu.spl.mics.application.passiveObjects;
  */
 public class BookInventoryInfo {
 	private String name;
-	private int amount;
+	private AtomicInteger amount;
 	private int price;
 
-	public  BookInventoryInfo(String name, int amount, int price) {
+	public BookInventoryInfo(String name, int amount, int price) {
 		this.name= name;
-		this.amount= amount;
+		this.amount= new AtomicInteger(amount);
 		this.price=price;
 	}
 
 	public void setAmountInInventory(int newAmount){
-		amount=newAmount;
+		amount.set(newAmount);
 	}
-
 
 	/**
      * Retrieves the title of this book.
@@ -37,7 +38,7 @@ public class BookInventoryInfo {
      * @return amount of available books.      
      */
 	public int getAmountInInventory() {
-		return amount;
+		return amount.get();
 	}
 
 	/**
@@ -48,8 +49,20 @@ public class BookInventoryInfo {
 	public int getPrice() {
 		return price;
 	}
-	
-	
-
+	/**
+	 * takes book if available (amount>0)
+	 * @return true if the book could be taken and false if not
+	 */
+	public boolean tryToTake() {
+		int oldAmount = amount.get();
+		if (amount.get() > 0) {
+			while (!amount.compareAndSet(oldAmount, oldAmount - 1)) {
+				oldAmount = amount.get();
+				if (oldAmount == 0) return false;
+			}
+		}
+		else return false;
+		return true;
+	}
 	
 }

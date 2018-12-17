@@ -42,10 +42,8 @@ public class InventoryService extends MicroService {
 		});
 
 		subscribeEvent(TakeBookEvent.class, c -> {
-			//synchronized (inventory) {
 			OrderResult orderResult = inventory.take(c.getBookTitle());
 			complete(c, orderResult);
-			//}
 		});
 	}
 }

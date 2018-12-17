@@ -85,6 +85,9 @@ public class Customer implements Serializable {
 		return creditNumber;
 	}
 
+	/**
+	 * Retrieves order receipt and add it to the orderReceipt list
+	 */
 	public void addReciept(OrderReceipt orderReceipt){
 		orderReceipts.add(orderReceipt);
 	}

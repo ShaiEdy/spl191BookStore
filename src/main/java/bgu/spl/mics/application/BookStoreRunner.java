@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BookStoreRunner {
     public static void main(String[] args) {
         args= new String[5]; //todo delete
-        args[0]="src/8.json"; args[1]= "a.txt"; args[2]= "b.obj"; args[3]="c.obj"; args[4]="d.obj";
+        args[0]="src/6.json"; args[1]= "a.txt"; args[2]= "b.obj"; args[3]="c.obj"; args[4]="d.obj";
 
         InitializationSingleton initializationSingleton= InitializationSingleton.getInstance(); // singleTone for counting the servers - we use it to make sure the servers dont miss the first timeTick
         int servicesCounter=0; // the counter
@@ -192,7 +192,6 @@ public class BookStoreRunner {
             out.writeObject(integerCustomerHashMap);
             out.close();
             fileOut.close();
-            System.out.println("\n Customer hashMap Serialization Successful... Checkout your specified output file..\n");
 
         }catch (IOException e) {
             e.printStackTrace();
@@ -213,13 +212,11 @@ public class BookStoreRunner {
 
             out.close();
             fileOut.close();
-            System.out.println("\n MoneyReg Serialization Successful... Checkout your specified output file..\n");
 
         }catch (IOException e) {
             e.printStackTrace();
         }
 
-        int x = 2;//todo delete
-        //System.exit(0); // todo:Check about AGENT_ERROR_NO_JNI_ENV(183): error.
+        System.exit(0);
     }
 }

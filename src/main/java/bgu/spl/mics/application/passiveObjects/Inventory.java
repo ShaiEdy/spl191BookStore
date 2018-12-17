@@ -60,12 +60,9 @@ public class Inventory {
 	public OrderResult take (String book) { ///only customer with money gets here
 		BookInventoryInfo bookInfo = bookInventoryInfo.get(book);
 		if (bookInfo != null) {
-			synchronized (bookInfo) {
-				int amount = bookInfo.getAmountInInventory();
-				if (amount != 0) {
-					bookInfo.setAmountInInventory(amount - 1);
-					return OrderResult.SUCCESSFULLY_TAKEN;
-				}
+			int amount = bookInfo.getAmountInInventory();
+			if (amount != 0 && bookInfo.tryToTake()) {
+				return OrderResult.SUCCESSFULLY_TAKEN;
 			}
 		}
 		return OrderResult.NOT_IN_STOCK;
@@ -106,7 +103,6 @@ public class Inventory {
 			FileOutputStream fileOut= new FileOutputStream((filename));
 			ObjectOutputStream  out = new ObjectOutputStream(fileOut);
 			out.writeObject(inventoryHashMap);
-			System.out.println("Object has been serialized ");
 
 			out.close();
 			fileOut.close();

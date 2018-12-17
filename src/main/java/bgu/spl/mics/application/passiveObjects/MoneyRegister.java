@@ -45,7 +45,10 @@ public class MoneyRegister implements Serializable {
 	 */
 	public void file (OrderReceipt r) {
 		orderReceipts.add(r);
-		while(!totalEarning.compareAndSet(totalEarning.get(),totalEarning.get()+r.getPrice())){}
+		int totalEarningTemp = totalEarning.get(); // preparing for the atomicInteger.
+		while(!totalEarning.compareAndSet(totalEarningTemp,totalEarningTemp+r.getPrice())){
+			totalEarningTemp = totalEarning.get();
+		}
 	}
 
 	/**
@@ -76,7 +79,6 @@ public class MoneyRegister implements Serializable {
 			out.writeObject(orderReceipts);
 			out.close();
 			fileOut.close();
-			System.out.println("\nSerialization Successful... Checkout your specified output file..\n");
 
 		}catch (IOException e) {
 			e.printStackTrace();

@@ -59,7 +59,7 @@
         "distance": 33,
         "creditCard": {
           "number": 67890,
-          "amount": 130
+          "amount": 200
         },
         "orderSchedule": [
           {
