@@ -23,8 +23,8 @@ public class MessageBusImpl implements MessageBus {
 
 	private MessageBusImpl() { // Constructor
 		microServiceToQueue = new ConcurrentHashMap<>();
-		eventToMicroService = new ConcurrentHashMap<>(); //TODO: make sure we add all the events as keys to this hashmap
-		broadCastToMicroService = new ConcurrentHashMap<>(); //TODO: make sure we add all the broadCasts as keys to this hashmap
+		eventToMicroService = new ConcurrentHashMap<>();
+		broadCastToMicroService = new ConcurrentHashMap<>();
 		messageFutureHashMap = new ConcurrentHashMap<>();
 	}
 
