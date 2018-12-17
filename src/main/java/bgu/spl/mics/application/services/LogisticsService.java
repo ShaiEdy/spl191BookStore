@@ -34,7 +34,7 @@ public class LogisticsService extends MicroService {
 			AcquireVehicleEvent acquireVehicleEvent = new AcquireVehicleEvent(getName());
 			Future<Future<DeliveryVehicle>> deliveryVehicleFuture= sendEvent(acquireVehicleEvent); // We expect to get back A future object that has another future object
 			//the inner future object will be resolved sometime to a vehicle.
-			DeliveryVehicle deliveryVehicle = deliveryVehicleFuture.get().get(); // this is not a blocking method
+				DeliveryVehicle deliveryVehicle = deliveryVehicleFuture.get().get(); // this is not a blocking method
 			if (deliveryVehicle!=null) { //I have a vehicle
 				deliveryVehicle.deliver(c.getAddress(), c.getDistance());// here it will sleep for the deliver time
 				complete(c,true);

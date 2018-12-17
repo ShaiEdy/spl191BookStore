@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BookStoreRunner {
     public static void main(String[] args) {
         args= new String[5]; //todo delete
-        args[0]="src/input.json"; args[1]= "a.txt"; args[2]= "b.obj"; args[3]="c.obj"; args[4]="d.obj";
+        args[0]="src/9.json"; args[1]= "a.txt"; args[2]= "b.obj"; args[3]="c.obj"; args[4]="d.obj";
 
         InitializationSingleton initializationSingleton= InitializationSingleton.getInstance(); // singleTone for counting the servers - we use it to make sure the servers dont miss the first timeTick
         int servicesCounter=0; // the counter

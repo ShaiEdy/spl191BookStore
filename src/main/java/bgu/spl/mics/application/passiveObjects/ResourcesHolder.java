@@ -59,10 +59,11 @@ public class ResourcesHolder {
      */
 	public void releaseVehicle(DeliveryVehicle vehicle) {
 		Future<DeliveryVehicle> vehicleFuture= futureVehiclesQueue.poll();
-		if (vehicleFuture!=null){
-			vehicleFuture.resolve(vehicle);
+		synchronized (this) { //todo: i added this synchronized
+			if (vehicleFuture != null) {
+				vehicleFuture.resolve(vehicle);
+			} else cars.add(vehicle);
 		}
-		else cars.add(vehicle);
 
 	}
 	
