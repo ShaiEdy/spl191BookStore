@@ -43,7 +43,6 @@ public class Inventory {
      * 						of the inventory.
      */
 	public void load (BookInventoryInfo[ ] inventory ) {
-		this.bookInventoryInfo = new ConcurrentHashMap<>(); //todo:delete this line
 		for (BookInventoryInfo book : inventory) {
 			bookInventoryInfo.put(book.getBookTitle(), book);
 		}

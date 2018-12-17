@@ -12,7 +12,7 @@
     ],
   "services":{
     "time": {
-      "speed": 1,
+      "speed": 100,
       "duration": 30
     },
     "selling": 3,

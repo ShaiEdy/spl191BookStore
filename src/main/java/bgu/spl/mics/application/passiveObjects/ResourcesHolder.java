@@ -74,7 +74,6 @@ public class ResourcesHolder {
      * @param vehicles	Array of {@link DeliveryVehicle} instances to store.
      */
 	public void load(DeliveryVehicle[] vehicles) {
-		cars = new LinkedBlockingQueue<>(); //todo delete
 		cars.addAll(Arrays.asList(vehicles));
 	}
 
