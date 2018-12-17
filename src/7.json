@@ -1,0 +1,50 @@
+{
+  "initialInventory": [
+    {"bookTitle": "notebook", "amount": 100, "price": 1},
+    {"bookTitle": "no pun intended volume too", "amount": 100, "price": 10},
+    {"bookTitle": "The Holy Bible", "amount": 200, "price": 100},
+    {"bookTitle": "The Lord Of Rings", "amount": 100, "price": 1000},
+    {"bookTitle": "The Lord Of Rings 2", "amount": 100, "price": 10000}
+  ],
+  "initialResources": [
+    {
+      "vehicles": [
+        {
+          "license": 123483,
+          "speed": 3
+        }
+      ]
+    }
+  ],
+  "services": {
+    "time": {"speed": 1000, "duration": 24},
+    "selling": 10,
+    "inventoryService": 10,
+    "logistics": 10,
+    "resourcesService": 10,
+    "customers": [
+      {
+        "id": 123456789,
+        "name": "Neyma",
+        "address": "NewYork 123",
+        "distance": 1,
+        "creditCard": {
+          "number": 67890,
+          "amount": 11111
+        },
+        "orderSchedule": [
+          {"bookTitle": "The Lord Of Rings 2", "tick": 3},
+          {"bookTitle": "The Lord Of Rings 2", "tick": 3},
+          {"bookTitle": "The Lord Of Rings", "tick": 4},
+          {"bookTitle": "The Lord Of Rings", "tick": 4},
+          {"bookTitle": "The Holy Bible", "tick": 5},
+          {"bookTitle": "The Holy Bible", "tick": 5},
+          {"bookTitle": "no pun intended volume too", "tick": 6},
+          {"bookTitle": "no pun intended volume too", "tick": 6},
+          {"bookTitle": "notebook", "tick": 7},
+          {"bookTitle": "notebook", "tick": 7}
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "initialInventory": [
+  {"bookTitle": "no pun intended volume too", "amount": 100, "price": 1019},
+  {"bookTitle": "The Holy Bible", "amount": 90, "price": 983},
+  {"bookTitle": "The Lord Of Rings", "amount": 2, "price": 1051}
+  ],
+  "initialResources":[
+   {"vehicles":[
+     {"license":123483, "speed": 2}
+     ]
+     }
+    ],
+  "services":{
+    "time": {
+      "speed": 1,
+      "duration": 30
+    },
+    "selling": 3,
+    "inventoryService": 1,
+    "logistics": 3,
+    "resourcesService": 3,
+    "customers": [
+     {
+        "id": 123456789,
+        "name": "Yuval Zilber",
+        "address": "NewYork 123",
+        "distance":33,
+        "creditCard":{"number":67890,"amount":100000},
+        "orderSchedule": [
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "no pun intended volume too", "tick": 3},
+            {"bookTitle": "The Holy Bible", "tick": 3},
+            {"bookTitle": "The Holy Bible", "tick": 3},
+            {"bookTitle": "The Holy Bible", "tick": 3},
+            {"bookTitle": "The Holy Bible", "tick": 3},
+            {"bookTitle": "The Holy Bible", "tick": 3},
+            {"bookTitle": "The Holy Bible", "tick": 3},
+            {"bookTitle": "The Holy Bible", "tick": 3},
+            {"bookTitle": "The Holy Bible", "tick": 4},
+            {"bookTitle": "The Holy Bible", "tick": 4},
+            {"bookTitle": "The Holy Bible", "tick": 4},
+            {"bookTitle": "The Holy Bible", "tick": 4},
+            {"bookTitle": "The Holy Bible", "tick": 4},
+            {"bookTitle": "The Holy Bible", "tick": 12},
+            {"bookTitle": "The Holy Bible", "tick": 12},
+            {"bookTitle": "The Holy Bible", "tick": 12},
+            {"bookTitle": "The Holy Bible", "tick": 12},
+            {"bookTitle": "The Holy Bible", "tick": 12},
+            {"bookTitle": "The Holy Bible", "tick": 12}
+          ]
+      },
+    {
+        "id": 234567891,
+        "name": "Shvat Messica",
+        "address": "BeerSheva 3333",
+        "distance":12,
+         "creditCard":{"number":453536,"amount":1000000},
+    "orderSchedule": [
+      {"bookTitle": "no pun intended volume too", "tick": 3},
+      {"bookTitle": "no pun intended volume too", "tick": 3},
+      {"bookTitle": "no pun intended volume too", "tick": 3},
+      {"bookTitle": "no pun intended volume too", "tick": 3},
+      {"bookTitle": "The Holy Bible", "tick": 3},
+      {"bookTitle": "The Holy Bible", "tick": 3},
+      {"bookTitle": "The Holy Bible", "tick": 3},
+      {"bookTitle": "The Holy Bible", "tick": 3},
+      {"bookTitle": "no pun intended volume too", "tick": 3},
+      {"bookTitle": "no pun intended volume too", "tick": 3},
+      {"bookTitle": "The Holy Bible", "tick": 12},
+      {"bookTitle": "The Holy Bible", "tick": 12},
+      {"bookTitle": "The Holy Bible", "tick": 12},
+      {"bookTitle": "The Holy Bible", "tick": 12}
+    ]
+    }
+  ]
+  }
+
+
+
+}

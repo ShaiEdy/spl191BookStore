@@ -1,0 +1,68 @@
+{
+  "initialInventory": [
+    {
+      "bookTitle": "Harry Poter",
+      "amount": 10,
+      "price": 90
+    },
+    {
+      "bookTitle": "The Hunger Games",
+      "amount": 90,
+      "price": 102
+    }
+  ],
+  "initialResources": [
+    {
+      "vehicles": [
+        {
+          "license": 123483,
+          "speed": 400
+        }
+      ]
+    }
+  ],
+  "services": {
+    "time": {
+      "speed": 1000,
+      "duration": 12
+    },
+    "selling": 6,
+    "inventoryService": 3,
+    "logistics": 4,
+    "resourcesService": 1,
+    "customers": [
+      {
+        "id": 123456789,
+        "name": "yuval",
+        "address": "ness-ziona 123",
+        "distance": 33,
+        "creditCard": {
+          "number": 67890,
+          "amount": 1000000
+        },
+        "orderSchedule": [
+          {
+            "bookTitle": "Harry Poter",
+            "tick": 1
+          }
+        ]
+      },
+      {
+        "id": 234567891,
+        "name": "shlomi",
+        "address": "BeerSheva 3333",
+        "distance": 12,
+        "creditCard": {
+          "number": 453536,
+          "amount": 1000000
+        },
+        "orderSchedule": [
+          {
+            "bookTitle": "The Hunger Games",
+            "tick": 12
+          }
+        ]
+      }
+    ]
+  }
+}
